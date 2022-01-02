@@ -2,72 +2,173 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sb
 import pandas as pd
+import plotters_help
 
-def energy_plots(df1, df2, df3, df4, df5, df6, df7, df8, df9, df10, df11, df12, ex_name):
-    """
-    plt.plot(arr1, c="b", label="Maxmin")
-    plt.plot(arr2, c="g", label="Minmin")
-    plt.title("Energy usage")
-    plt.legend(loc="lower right")
-    plt.savefig("img/energy.png")
+def energy_plots(list, ex_name):
 
-    plt.figure()
-    """
+    f, axs =plt.subplots(3,1)
+    counter = 0
+
+    #iterate through every dataframe
+    for it in list:
+        lab = ""
+        host_number = 0
+        if(counter % 3 == 0):
+            host_number = 16
+        elif(counter % 3 == 1):
+            host_number = 8
+        elif(counter % 3 == 2):
+            host_number = 4
+
+        #configure df to KW and to mash together all hosts
+        it, temp_length = plotters_help.all_hosts_df(it, host_number)
+
+        length_array = []
+        #Get length (so that we can plot x axis with correct times)
+        for i in range (0,temp_length):
+            length_array.append(temp_length*i)
+
+        #so that we can categorize correctly
+        if(counter//3 == 0):
+            mark = "x"
+            lab="Max-min"
+        elif(counter//3 == 1):
+            lab="Min-Min"
+        elif(counter//3 == 2):
+            lab="ELOP"
+        elif(counter//3 == 3):
+            lab="Random"
+
+        #plot per scale
+        if(host_number==16):
+            axs[2].plot(length_array, it["Energy"], label=lab)
+            axs[2].set_title("Double scale", size=10)
+            axs[2].tick_params(labelsize=6)
+        elif(host_number==8):
+            axs[1].plot(length_array, it["Energy"], label=lab)
+            axs[1].set_title("Base scale", size=10)
+            axs[1].tick_params(labelsize=6)
+        elif(host_number==4):
+            axs[0].plot(length_array, it["Energy"], label=lab)
+            axs[0].set_title("Half scale", size=10)
+            axs[0].tick_params(labelsize=6)
+        counter += 1
+        #plt.plot(it["Time (s)"], it["Energy"], label=lab, marker=mark, markevery=arr)
+
+    #Extra labels
+    axs[1].set_ylabel("Energy consumption(KW)")
+    axs[2].set_xlabel("Time (minutes)")
+    axs[0].legend(loc="upper right")
+    
+    #adjust spaces between each plot so that labels fit
+    plt.subplots_adjust(left=0.1,
+                    bottom=0.1, 
+                    top=0.9, 
+                    wspace=0.4, 
+                    hspace=0.4)
+
+    plt.savefig("img2/"+ex_name+"perScale2.png")
+
+def energy_bar(list, ex_name, mode):
+    energy_list = []
+    name = ["Double", "Base", "Half","Double","Base","Half","Double", "Base",
+    "Half", "Double", "Base", "Half"]
+    for it in list:
+        energy_list.append(((it["energyUsage(Power usage of the host in W)"].sum())/1000))
+    
+    if(mode == 1):
+        fig,axs = plt.subplots(2,2, sharey="all")
+        axs[0,0].bar(name[0:3], energy_list[0:3])
+        axs[0,0].set_title("MaxMin", size=10)
+        axs[0,1].bar(name[3:6], energy_list[3:6])
+        axs[0,1].set_title("MinMin", size=10)
+        axs[1,0].bar(name[6:9], energy_list[6:9])
+        axs[1,0].set_title("ELOP", size=10)
+        axs[1,1].bar(name[9:12], energy_list[9:12])
+        axs[1,1].set_title("Random", size=10)
+        axs[1,0].set_ylabel("Energy consumption (kW)")
+
+    plt.subplots_adjust(left=0.2,
+                    bottom=0.1, 
+                    top=0.9, 
+                    wspace=0.2, 
+                    hspace=0.4)
+    
+    plt.savefig("img2/"+ex_name+".png")
+
+
+def usage_plots(list, ex_name):
     f, ax =plt.subplots()
-
+    
+    counter = 0
 
     df1_2 = pd.DataFrame()
-    df1_2["Half scale"] = df3["energyUsage(Power usage of the host in W)"]
-    df1_2["Double scale"] = df1["energyUsage(Power usage of the host in W)"]
-    df1_2["Base scale"] = df2["energyUsage(Power usage of the host in W)"]
-
     df3_4 = pd.DataFrame()
-    df3_4["Half scale"] = df6["energyUsage(Power usage of the host in W)"]
-    df3_4["Double scale"] = df4["energyUsage(Power usage of the host in W)"]
-    df3_4["Base scale"] = df5["energyUsage(Power usage of the host in W)"]
-    
-
     df5_6 = pd.DataFrame()
-    df5_6["Half scale"] = df9["energyUsage(Power usage of the host in W)"]
-    df5_6["Double scale"] = df7["energyUsage(Power usage of the host in W)"]
-    df5_6["Base scale"] = df8["energyUsage(Power usage of the host in W)"]
-
-
     df7_8 = pd.DataFrame()
-    df7_8["Half scale"] = df12["energyUsage(Power usage of the host in W)"]
-    df7_8["Double scale"] = df10["energyUsage(Power usage of the host in W)"]
-    df7_8["Base scale"] = df11["energyUsage(Power usage of the host in W)"]
+    for it in list:
+        lab = ""
+        host_number = 0
+        if(counter % 3 == 0):
+            host_number = 16
+        elif(counter % 3 == 1):
+            host_number = 8
+        elif(counter % 3 == 2):
+            host_number = 4
 
+        it, empty = plotters_help.all_hosts_df(it, host_number)
+        
+        if(counter//3 == 0): #i could make this a function... we'll see....
+            if(host_number==16):
+                df1_2["Double scale"] = it["cpuUsage"]
+            elif(host_number==8):
+                df1_2["Base scale"] = it["cpuUsage"]
+            elif(host_number == 4):
+                df1_2["Half scale"] = it["cpuUsage"]
+        elif(counter//3 == 1):
+            if(host_number==16):
+                df3_4["Double scale"] = it["cpuUsage"]
+            elif(host_number==8):
+                df3_4["Base scale"] = it["cpuUsage"]
+            elif(host_number == 4):
+                df3_4["Half scale"] = it["cpuUsage"]
+        elif(counter//3 == 2):
+            if(host_number==16):
+                df5_6["Double scale"] = it["cpuUsage"]
+            elif(host_number==8):
+                df5_6["Base scale"] = it["cpuUsage"]
+            elif(host_number == 4):
+                df5_6["Half scale"] = it["cpuUsage"]
+        elif(counter//3 == 3):
+            if(host_number==16):
+                df7_8["Double scale"] = it["cpuUsage"]
+            elif(host_number==8):
+                df7_8["Base scale"] = it["cpuUsage"]
+            elif(host_number == 4):
+                df7_8["Half scale"] = it["cpuUsage"]            
+
+        counter +=1
+    
     df1_2["Policy"] = "Max-Min"
     df3_4["Policy"] = "Min-Min"
     df5_6["Policy"] = "ELOP"
     df7_8["Policy"] = "Random"
 
     df = pd.concat([df1_2, df3_4, df5_6, df7_8], ignore_index=True)
-    
-    df.to_csv("bruh.csv")
 
     dd=pd.melt(df,id_vars=['Policy'],value_vars=['Half scale', 'Base scale', "Double scale"],var_name='Scale')
     plot = sb.boxplot(x='value',y='Policy',data=dd,hue='Scale', width=0.3)
 
-    ax.set_xlabel("Energy consumption(KW)")
-    ax.set_title("Energy consumption per 20 minutes")
-
-    plt.savefig("img/"+ex_name+".png")
-
-def usage_plots(arr1,arr2):
-    plt.plot(arr1, c="b", label="Maxmin")
-    plt.plot(arr2, c="g", label="Minmin")
-    plt.title("CPU usage")
-    plt.legend(loc="lower right")
-    plt.savefig("img/cpu.png")
+    ax.set_xlabel("CPU usage (MHz)")
+    ax.set_title("CPU usage per 20 minutes")
+    
+    plt.savefig("img2/"+ex_name+".png")
 
 def arrival_plots():
     
     pass
 
-def cdf_plots(df1, df2, df3, df4, df5, df6, df7, df8, df9, df10, df11, df12, name):
-    list = [df1, df2, df3, df4, df5, df6, df7, df8, df9, df10, df11, df12]
+def cdf_plots(list, name):
     ax, fig = plt.subplots()
 
     it_number = 0
@@ -92,7 +193,7 @@ def cdf_plots(df1, df2, df3, df4, df5, df6, df7, df8, df9, df10, df11, df12, nam
         elif(it_number//3 == 3):
             lab += " Random"
             mark = "v"
-        it = convert_to_cdf(it)
+        it = plotters_help.convert_to_cdf(it)
         arr = [100, 200, 300, 400, 500, 600, 700, 800]
         plt.plot(it["Time (s)"], it["Percentage of completion"], label=lab, marker=mark, markevery=arr)
 
@@ -101,53 +202,39 @@ def cdf_plots(df1, df2, df3, df4, df5, df6, df7, df8, df9, df10, df11, df12, nam
     plt.xlabel("Time (s)")
     plt.ylabel("Percentage of tasks completed")
     
-    plt.savefig("img/"+name+".png")
+    plt.savefig("img2/"+name+".png")
 
-def convert_to_cdf(df):
-    num_tasks = df["Tasks #"].sum()
-    sorted_df = df.sort_values(by="Time (s)")
 
-    task_array = sorted_df["Tasks #"].to_numpy()
 
-    percentage_of_completion = []
-    perc_task_comp = 0
-    for task in task_array:
-        perc_task_comp += (task/num_tasks)*100
-        percentage_of_completion.append(perc_task_comp)
-    
-    sorted_df["Percentage of completion"] = percentage_of_completion
-    return sorted_df
-
-def makespan_plot(df1, df2, df3, df4, df5, df6, df7, df8, df9, df10, df11, df12, name):
+def makespan_plot(list, name):
     f, ax =plt.subplots()
-    df1_2 = pd.DataFrame()
     
-    df1_2["Half scale"] = df3["Makespan (s)"]
-    df1_2["Double scale"] = df1["Makespan (s)"]
-    df1_2["Base scale"] = df2["Makespan (s)"]
+    """df1_3 = pd.DataFrame()
+    df4_6 = pd.DataFrame()
+    df7_9 = pd.DataFrame()
+    df10_12 = pd.DataFrame()"""
+    data = []
+    policy_names= ["Max-Min","Min-Min","ELOP","Random"]
+    counter=0
+    
+    data_req = (len(list) // 3) # DO INTEGER DIV since there are three different scales... has to edited if we scale up... shit code my bad
     
 
-    df3_4 = pd.DataFrame()
-    df3_4["Half scale"] = df6["Makespan (s)"]
-    df3_4["Double scale"] = df4["Makespan (s)"]
-    df3_4["Base scale"] = df5["Makespan (s)"]
+    for i in range (0, data_req):
+        df_combo = pd.DataFrame()
+        df1 = list[counter]
+        df2 = list[counter+1]
+        df3 = list[counter+2]
 
-    df5_6 = pd.DataFrame()
-    df5_6["Half scale"] = df9["Makespan (s)"]
-    df5_6["Double scale"] = df8["Makespan (s)"]
-    df5_6["Base scale"] = df7["Makespan (s)"]
+        counter += 3
+        df_combo["Double scale"] = df1["Makespan (s)"]
+        df_combo["Base scale"] = df2["Makespan (s)"]
+        df_combo["Half scale"] = df3["Makespan (s)"]
+        df_combo["Policy"] = policy_names[i]
+        data.append(df_combo)
+   
 
-    df7_8 = pd.DataFrame()
-    df7_8["Half scale"] = df12["Makespan (s)"]
-    df7_8["Double scale"] = df10["Makespan (s)"]
-    df7_8["Base scale"] = df11["Makespan (s)"]
-
-    df1_2["Policy"] = "Max-Min"
-    df3_4["Policy"] = "Min-Min"
-    df5_6["Policy"] = "ELOP"
-    df7_8["Policy"] = "Random"
-
-    df = pd.concat([df1_2, df3_4, df5_6, df7_8], ignore_index=True)
+    df = pd.concat([data[0], data[1], data[2], data[3]], ignore_index=True)
 
     
     dd=pd.melt(df,id_vars=['Policy'],value_vars=['Half scale', 'Base scale', "Double scale"],var_name='Scale')
@@ -156,5 +243,115 @@ def makespan_plot(df1, df2, df3, df4, df5, df6, df7, df8, df9, df10, df11, df12,
 
     ax.set_xlabel("Makespan (s)")
     ax.set_title("Makespan for workflows")
-    plt.savefig("img/"+name+".png")
+    plt.savefig("img2/"+name+".png")
 
+def performance_per_KWH(list, time_list, gflop, name):
+    #homogeneous test = 2513 FLOPs
+    #hetrogeneous test = 2190 FLOPs
+
+    #(flo / makespan) / (totalEnergy / response time) = performance per kWh
+    
+    f, ax=plt.subplots()
+    #iterate through dfs to transform them into approrpriate values
+    counter = 0
+    configured_list = []
+    
+    #needed for proper categorization later
+    host_number_arr = []
+    
+    for it in list:
+        host_number = 0
+        if(counter % 3 == 0):
+            host_number = 16
+        elif(counter % 3 == 1):
+            host_number = 8
+        elif(counter % 3 == 2):
+            host_number = 4
+            
+
+        #configure df to KW and to mash together all hosts
+        it, temp_length = plotters_help.all_hosts_df(it, host_number)
+
+        configured_list.append(it)
+        host_number_arr.append(host_number)
+        counter += 1
+    
+    #get sum makespan and response time for all of the different scales
+    makespan_list = []
+    response_list = []
+    for it in time_list:
+        makespan_list.append(it["Makespan (s)"].sum())
+        response_list.append(it["Workflow Response time (s)"].sum())
+    #empty dfs for categorizations
+    dfmax_min = pd.DataFrame()
+    dfmin_min = pd.DataFrame()
+    dfelop = pd.DataFrame()
+    dfrandom= pd.DataFrame()
+
+    #Do the calculations from formula on top
+    counter_time=0
+    calculated_list = []
+    for it in configured_list:
+        it["cpuUsage"]= it["cpuUsage"]/(makespan_list[counter_time])
+        it["Energy"] = it["Energy"]/(response_list[counter_time])
+
+        calculated_list.append(it)
+        
+        
+        #horrible horrible horrible if nests
+        if(counter_time//3 == 0):
+            if(host_number_arr[counter_time]==16):
+                it['cpu/energy'] = np.where(it['cpuUsage'] < 0.0001, it['cpuUsage'], 16*gflop/it['Energy'])
+                dfmax_min["Double scale"] = it["cpu/energy"]
+            elif(host_number_arr[counter_time]==8):
+                it['cpu/energy'] = np.where(it['cpuUsage'] < 0.0001, it['cpuUsage'], 8*gflop/it['Energy'])
+                dfmax_min["Base scale"] = it["cpu/energy"]
+            elif(host_number_arr[counter_time] == 4):
+                it['cpu/energy'] = np.where(it['cpuUsage'] < 0.0001, it['cpuUsage'], 4*gflop/it['Energy'])
+                dfmax_min["Half scale"] = it["cpu/energy"]
+        elif(counter_time//3 == 1):
+            if(host_number_arr[counter_time]==16):
+                it['cpu/energy'] = np.where(it['cpuUsage'] < 0.0001, it['cpuUsage'], 16*gflop/it['Energy'])
+                dfmin_min["Double scale"] = it["cpu/energy"]
+            elif(host_number_arr[counter_time]==8):
+                it['cpu/energy'] = np.where(it['cpuUsage'] < 0.0001, it['cpuUsage'], 8*gflop/it['Energy'])
+                dfmin_min["Base scale"] = it["cpu/energy"]
+            elif(host_number_arr[counter_time] == 4):
+                it['cpu/energy'] = np.where(it['cpuUsage'] < 0.0001, it['cpuUsage'], 4*gflop/it['Energy'])
+                dfmin_min["Half scale"] = it["cpu/energy"]
+        elif(counter_time//3 == 2):
+            if(host_number_arr[counter_time]==16):
+                it['cpu/energy'] = np.where(it['cpuUsage'] < 0.0001, it['cpuUsage'], 16*gflop/it['Energy'])
+                dfelop["Double scale"] = it["cpu/energy"]
+            elif(host_number_arr[counter_time]==8):
+                it['cpu/energy'] = np.where(it['cpuUsage'] < 0.0001, it['cpuUsage'], 8*gflop/it['Energy'])
+                dfelop["Base scale"] = it["cpu/energy"]
+            elif(host_number_arr[counter_time] == 4):
+                it['cpu/energy'] = np.where(it['cpuUsage'] < 0.0001, it['cpuUsage'], 4*gflop/it['Energy'])
+                dfelop["Half scale"] = it["cpu/energy"]
+        elif(counter_time//3 == 3):
+            if(host_number_arr[counter_time]==16):
+                it['cpu/energy'] = np.where(it['cpuUsage'] < 0.0001, it['cpuUsage'], 16*gflop/it['Energy'])
+                dfrandom["Double scale"] = it["cpu/energy"]
+            elif(host_number_arr[counter_time]==8):
+                it['cpu/energy'] = np.where(it['cpuUsage'] < 0.0001, it['cpuUsage'], 8*gflop/it['Energy'])
+                dfrandom["Base scale"] = it["cpu/energy"]
+            elif(host_number_arr[counter_time] == 4):
+                it['cpu/energy'] = np.where(it['cpuUsage'] < 0.0001, it['cpuUsage'], 4*gflop/it['Energy'])
+                dfrandom["Half scale"] = it["cpu/energy"]
+        counter_time += 1
+    dfmax_min["Policy"] = "Max-Min"
+    dfmin_min["Policy"] = "Min-Min"
+    dfelop["Policy"] = "ELOP"
+    dfrandom["Policy"] = "Random"
+
+    df = pd.concat([dfmax_min, dfmin_min, dfelop, dfrandom], ignore_index=True)
+    
+    dd=pd.melt(df,id_vars=['Policy'],value_vars=['Half scale', 'Base scale', "Double scale"],var_name='Scale')
+    plot = sb.boxplot(x='value',y='Policy',data=dd,hue='Scale', width=0.3)
+
+
+    ax.set_xlabel("Max GFLOPs per kWh")
+    
+    plt.savefig("img2/"+name+".png")
+    pass
