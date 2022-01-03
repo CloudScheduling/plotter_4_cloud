@@ -3,83 +3,43 @@ import numpy as np
 import os
 
 
-def read_makespan_csv(path_to_folder):
-    het16 = pd.read_csv(path_to_folder + "hetro_scale16_makespan.csv")
-    het8 = pd.read_csv(path_to_folder + "hetro_scale8_makespan.csv")
-    het4 = pd.read_csv(path_to_folder + "hetro_scale4_makespan.csv")
-    hom4 = pd.read_csv(path_to_folder + "homo_scale4_makespan.csv")
-    hom8 = pd.read_csv(path_to_folder + "homo_scale8_makespan.csv")
-    hom16 = pd.read_csv(path_to_folder + "homo_scale16_makespan.csv")
+def sort_dfs(paths):
+    """
+    Creates a multi-dimensional dictionary based on all policies provided.
+    The function takes the filename of a csv file, takes the attributes contained in it
+    and places the file as a dataframe under the attributes contained in the filename.
 
-    return het16, het8, het4, hom16, hom8, hom4
+    Every file follows the pattern "traceId_policy_environmentType_scale_fileType.csv".
+    The corresponding dataframe is then found in dict[traceId][policy][environmentType][scale][fileType].
 
+    An error is thrown if the number of attributes is wrong.
+    :param paths: names of the folders (relative to current working directory) where the csv files are contained in. Nested folders are not considered and need to be added manually.
+    :return: dictionary with keys as described above. The last elements are the dataframes with the metrics captured from OpenDC.
+    """
 
-def read_metrics_csv(path_to_folder):
-    het16 = pd.read_csv(path_to_folder + "hetro_scale16_metrics.csv")
-    het8 = pd.read_csv(path_to_folder + "hetro_scale8_metrics.csv")
-    het4 = pd.read_csv(path_to_folder + "hetro_scale4_metrics.csv")
-    hom16 = pd.read_csv(path_to_folder + "homo_scale16_metrics.csv")
-    hom8 = pd.read_csv(path_to_folder + "homo_scale8_metrics.csv")
-    hom4 = pd.read_csv(path_to_folder + "homo_scale4_metrics.csv")
+    final_data = {}
 
-    return het16, het8, het4, hom16, hom8, hom4
+    for path in paths:
+        for _, _, files in os.walk(path):
+            for file in files:
+                file_name_with_extension = os.path.basename(file)
+                file_name = file_name_with_extension.split(".")[0]
 
+                # extract tokens from the file found
+                tokens = file_name.split("_")
+                exptected_number_tokens = 5  # [policy, trace, kind, scale, file_kind]
+                if len(tokens) != exptected_number_tokens:
+                    raise RuntimeError(
+                        f"Error splitting name of {file}: only {len(tokens)} tokens found, expected {exptected_number_tokens}")
 
-def read_time_csv(path_to_folder):
-    het16 = pd.read_csv(path_to_folder + "hetro_scale16_taksOvertime.csv")
-    het8 = pd.read_csv(path_to_folder + "hetro_scale8_taksOvertime.csv")
-    het4 = pd.read_csv(path_to_folder + "hetro_scale4_taksOvertime.csv")
-    hom16 = pd.read_csv(path_to_folder + "homo_scale16_taksOvertime.csv")
-    hom8 = pd.read_csv(path_to_folder + "homo_scale8_taksOvertime.csv")
-    hom4 = pd.read_csv(path_to_folder + "homo_scale4_taksOvertime.csv")
+                # create missing keys recursively
+                temp_data_ref = final_data
+                for token in tokens[0:-1]:  # -1: last key is special, this will be the dataframe
+                    if token not in temp_data_ref:
+                        temp_data_ref[token] = {}
+                    temp_data_ref = temp_data_ref[token]
 
-    return het16, het8, het4, hom16, hom8, hom4
+                path_relative_to_root = os.path.join(path, file_name_with_extension)
+                temp_data_ref[tokens[-1]] = pd.read_csv(path_relative_to_root)
 
-
-def sort_dfs():  # calls the readers and sorts dataframes into correct arrays
-
-    maxmin_path = os.path.join("Max-Min", "specTrace2_maxMin_")
-    minmin_path = os.path.join("Min-Min", "specTrace2_minMin_")
-    elop_path = os.path.join("ELOP", "specTrace2_elop_")
-    random_path = os.path.join("Random", "specTrace2_random_")  # add paths for all data, should be this format
-
-    # just add the path here if you want to include it in the mapping
-    path_arr = [maxmin_path, minmin_path, elop_path, random_path]
-
-    performance_het = []
-    performance_homog = []
-    makespan_het = []
-    makespan_homog = []
-    taskTime_het = []
-    taskTime_homog = []
-
-    # loops through and reads the csvs in the paths and appends them to correct dfs
-    for path in path_arr:
-        makespan_het16, makespan_het8, makespan_het4, makespan_homog16, makespan_homog8, makespan_homog4 = read_makespan_csv(
-            path)
-        metrics_het16, metrics_het8, metrics_het4, metrics_homog16, metrics_homog8, metrics_homog4 = read_metrics_csv(
-            path)
-        time_het16, time_het8, time_het4, time_homog16, time_homog8, time_homog4 = read_time_csv(
-            path)
-
-        multi_append(performance_het, metrics_het16, metrics_het8, metrics_het4)
-
-        multi_append(performance_homog, metrics_homog16, metrics_homog8, metrics_homog4)
-
-        multi_append(makespan_het, makespan_het16, makespan_het8, makespan_het4)
-
-        multi_append(makespan_homog, makespan_homog16, makespan_homog8, makespan_homog4)
-
-        multi_append(taskTime_het, time_het16, time_het8, time_het4)
-
-        multi_append(taskTime_homog, time_homog16, time_homog8, time_homog4)
-
-    return performance_het, performance_homog, makespan_het, makespan_homog, taskTime_het, taskTime_homog
-
-
-def multi_append(array, element1, element2, element3):
-    array.append(element1)
-    array.append(element2)
-    array.append(element3)
-
-    return
+    return final_data
