@@ -1,5 +1,7 @@
 import re
 
+import pandas as pd
+
 
 def get_trailing_int(string):
     a = [int(s) for s in re.findall(r"\d+", string)]
@@ -58,7 +60,6 @@ class DataTransformer:
             meta["scale_plot_mapping"] = {scale_keys[i]: i for i in range(len(scale_keys))}
             for scale_name, scale in environment.items():
                 metrics_df = scale[self.metrics_file_key]
-
                 # transformation of the actual dataframe
                 df_needed_columns = metrics_df[["Timestamp(s)", "energyUsage(Power usage of the host in W)"]]
                 df_needed_columns = df_needed_columns.rename(columns={"Timestamp(s)": "timestamp", "energyUsage(Power usage of the host in W)": "energyUsage"})
@@ -81,3 +82,38 @@ class DataTransformer:
 
     def to_performance_plot(self):
         pass
+
+    def to_utilization_table(self, trace_key, environment_key, file_name):
+        """
+
+        :param trace_key:
+        :param environment_key:
+        :param file_name:
+        :return:
+        """
+        meta = {}
+
+
+        # filtering
+        filtered_data = pd.DataFrame(columns=["policy"])
+        for policy_name, policy in self.data[trace_key].items():
+            filtered_data = filtered_data.append({"policy": policy_name}, ignore_index=True)
+            for scale_name, scale in policy[environment_key].items():
+                df = scale[self.metrics_file_key][["Timestamp(s)", "cpuUsage(CPU usage of all CPUs of the host in MHz)"]]
+                df = df.rename(columns={
+                    "Timestamp(s)": "timestamp",
+                    "cpuUsage(CPU usage of all CPUs of the host in MHz)": "cpuUsage",
+                })
+                host_df = scale[self.hostInfo_file_key]
+                maxCapacity = host_df[["maxCapacity(MHz)"]].sum().values[0]
+                df = df.groupby("timestamp").sum()
+                df["cpuUsage"] = df["cpuUsage"].apply(lambda absoluteUsage : absoluteUsage / maxCapacity)
+                mean = df["cpuUsage"].mean()
+
+                scale_num = get_trailing_int(scale_name)
+                if scale_num not in filtered_data.columns:
+                    filtered_data[scale_num] = -1
+                filtered_data.loc[filtered_data["policy"] == policy_name, scale_num] = mean
+        filtered_data = filtered_data.set_index("policy")
+        filtered_data = filtered_data.reindex(sorted(filtered_data.columns), axis=1)
+        return filtered_data, meta

@@ -14,6 +14,8 @@ def plot_data():
     plotters.energy_plots(*transformer.to_energy_plot("specTrace2", "homo", "img2/Homo.png"))
     plotters.energy_plots(*transformer.to_energy_plot("specTrace2", "hetro", "img2/Hetro.png"))
 
+    a, _ = transformer.to_utilization_table("specTrace2", "homo", "asdasd")
+    print()
     # plotters.energy_plots(performance_het, "HeterogeneousEnergy")
     # plotters.energy_plots(performance_homog, "HomogeneousEnergy")
     #
