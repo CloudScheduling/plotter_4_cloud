@@ -5,59 +5,22 @@ import pandas as pd
 import plotters_help
 
 
-def energy_plots(list, ex_name):
-    f, axs = plt.subplots(3, 1)
-    counter = 0
+def energy_plots(data, meta):
+    f, axs = plt.subplots(meta["scales"], 1)
+    axis_mapping = meta["scale_plot_mapping"]
 
     # iterate through every dataframe
-    for it in list:
-        lab = ""
-        host_number = 0
-        if (counter % 3 == 0):
-            host_number = 16
-        elif (counter % 3 == 1):
-            host_number = 8
-        elif (counter % 3 == 2):
-            host_number = 4
-
-        # configure df to KW and to mash together all hosts
-        it, temp_length = plotters_help.all_hosts_df(it, host_number)
-
-        length_array = []
-        # Get length (so that we can plot x axis with correct times)
-        for i in range(0, temp_length):
-            length_array.append(temp_length * i)
-
-        # so that we can categorize correctly
-        if (counter // 3 == 0):
-            mark = "x"
-            lab = "Max-min"
-        elif (counter // 3 == 1):
-            lab = "Min-Min"
-        elif (counter // 3 == 2):
-            lab = "ELOP"
-        elif (counter // 3 == 3):
-            lab = "Random"
-
-        # plot per scale
-        if (host_number == 16):
-            axs[2].plot(length_array, it["Energy"], label=lab)
-            axs[2].set_title("Double scale", size=10)
-            axs[2].tick_params(labelsize=6)
-        elif (host_number == 8):
-            axs[1].plot(length_array, it["Energy"], label=lab)
-            axs[1].set_title("Base scale", size=10)
-            axs[1].tick_params(labelsize=6)
-        elif (host_number == 4):
-            axs[0].plot(length_array, it["Energy"], label=lab)
-            axs[0].set_title("Half scale", size=10)
-            axs[0].tick_params(labelsize=6)
-        counter += 1
-        # plt.plot(it["Time (s)"], it["Energy"], label=lab, marker=mark, markevery=arr)
+    for policy_name, policy in data.items():
+        for scale_name, scale in policy.items():
+            axs_idx = axis_mapping[scale_name]
+            axs[axs_idx].plot(scale.index, scale[["energyUsage"]], label=policy_name)
+            axs[axs_idx].set_title(scale_name, size=10)
+            axs[axs_idx].tick_params(labelsize=6)
 
     # Extra labels
-    axs[1].set_ylabel("Energy consumption(KW)")
-    axs[2].set_xlabel("Time (minutes)")
+    middle_idx = int(len(axis_mapping)/2)
+    axs[middle_idx].set_ylabel("Energy consumption(W)")
+    axs[-1].set_xlabel("Time (minutes)")
     axs[0].legend(loc="upper right")
 
     # adjust spaces between each plot so that labels fit
@@ -67,7 +30,7 @@ def energy_plots(list, ex_name):
                         wspace=0.4,
                         hspace=0.4)
 
-    plt.savefig("img2/" + ex_name + "perScale2.png")
+    plt.savefig(meta["file_name"])
 
 
 def energy_bar(list, ex_name, mode):
