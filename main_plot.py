@@ -29,4 +29,5 @@ def plot_data():
     plotters.performance_per_KWH(performance_homog, makespan_homog, 2513, "HomogFlopsPerkWh")
 
 
-plot_data()
+if __name__ == "__main__":
+    plot_data()
