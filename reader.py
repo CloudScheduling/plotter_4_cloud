@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import os
 
 
 def read_makespan_csv(path_to_folder):
@@ -25,12 +26,12 @@ def read_metrics_csv(path_to_folder):
 
 
 def read_time_csv(path_to_folder):
-    het16 = pd.read_csv(path_to_folder + "hetro_scale16_taksOverTime.csv")
-    het8 = pd.read_csv(path_to_folder + "hetro_scale8_taksOverTime.csv")
-    het4 = pd.read_csv(path_to_folder + "hetro_scale4_taksOverTime.csv")
-    hom16 = pd.read_csv(path_to_folder + "homo_scale16_taksOverTime.csv")
-    hom8 = pd.read_csv(path_to_folder + "homo_scale8_taksOverTime.csv")
-    hom4 = pd.read_csv(path_to_folder + "homo_scale4_taksOverTime.csv")
+    het16 = pd.read_csv(path_to_folder + "hetro_scale16_taksOvertime.csv")
+    het8 = pd.read_csv(path_to_folder + "hetro_scale8_taksOvertime.csv")
+    het4 = pd.read_csv(path_to_folder + "hetro_scale4_taksOvertime.csv")
+    hom16 = pd.read_csv(path_to_folder + "homo_scale16_taksOvertime.csv")
+    hom8 = pd.read_csv(path_to_folder + "homo_scale8_taksOvertime.csv")
+    hom4 = pd.read_csv(path_to_folder + "homo_scale4_taksOvertime.csv")
 
     return het16, het8, het4, hom16, hom8, hom4
 
