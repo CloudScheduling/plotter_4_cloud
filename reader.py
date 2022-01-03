@@ -38,10 +38,10 @@ def read_time_csv(path_to_folder):
 
 def sort_dfs():  # calls the readers and sorts dataframes into correct arrays
 
-    maxmin_path = "Max-Min/specTrace2_maxMin_"
-    minmin_path = "Min-Min/specTrace2_minMin_"
-    elop_path = "ELOP/specTrace2_elop_"
-    random_path = "Random/specTrace2_random_"  # add paths for all data, should be this format
+    maxmin_path = os.path.join("Max-Min", "specTrace2_maxMin_")
+    minmin_path = os.path.join("Min-Min", "specTrace2_minMin_")
+    elop_path = os.path.join("ELOP", "specTrace2_elop_")
+    random_path = os.path.join("Random", "specTrace2_random_")  # add paths for all data, should be this format
 
     # just add the path here if you want to include it in the mapping
     path_arr = [maxmin_path, minmin_path, elop_path, random_path]
