@@ -29,16 +29,16 @@ def energy_plots(list, ex_name):
             length_array.append(temp_length * i)
 
         # so that we can categorize correctly
-        if (counter // 4 == 0):
+        if (counter // 3 == 0):
             mark = "x"
             lab = "Max-Min"
-        elif (counter // 4 == 1):
+        elif (counter // 3 == 1):
             lab = "Min-Min"
-        elif (counter // 4 == 2):
+        elif (counter // 3 == 2):
             lab = "ELoP"
-        elif (counter // 4 == 3):
+        elif (counter // 3 == 3):
             lab = "HEFT"
-        elif (counter // 4 == 4):
+        elif (counter // 3 == 4):
             lab = "Random"
 
         # plot per scale
@@ -74,8 +74,7 @@ def energy_plots(list, ex_name):
 
 def energy_bar(list, ex_name, mode):
     energy_list = []
-    name = ["Double", "Base", "Half", "Double", "Base", "Half", "Double", "Base",
-            "Half", "Double", "Base", "Half", "Double", "Base", "Half"]
+    name = ["D", "B", "H"]
     for it in list:
         energy_list.append(((it["energyUsage(Power usage of the host in W)"].sum()) / 1000))
 
@@ -83,15 +82,15 @@ def energy_bar(list, ex_name, mode):
         fig, axs = plt.subplots(1, 5, sharey="all")
         axs[0].bar(name[0:3], energy_list[0:3])
         axs[0].set_title("MaxMin", size=10)
-        axs[1].bar(name[3:6], energy_list[3:6])
+        axs[1].bar(name[0:3], energy_list[3:6])
         axs[1].set_title("MinMin", size=10)
-        axs[2].bar(name[6:9], energy_list[6:9])
+        axs[2].bar(name[0:3], energy_list[6:9])
         axs[2].set_title("ELoP", size=10)
-        axs[3].bar(name[9:12], energy_list[9:12])
+        axs[3].bar(name[0:3], energy_list[9:12])
         axs[3].set_title("HEFT", size=10)
-        axs[4].bar(name[12:15], energy_list[12:15])
+        axs[4].bar(name[0:3], energy_list[12:15])
         axs[4].set_title("Random", size=10)
-        plt.ylabel("Energy consumption (kW)")
+        axs[0].set_ylabel("Energy consumption (kW)")
 
     plt.subplots_adjust(left=0.2,
                         bottom=0.1,
@@ -112,6 +111,7 @@ def usage_plots(list, ex_name):
     df5_6 = pd.DataFrame()
     df7_8 = pd.DataFrame()
     df9_10 = pd.DataFrame()
+
     for it in list:
         lab = ""
         host_number = 0
@@ -124,35 +124,35 @@ def usage_plots(list, ex_name):
 
         it, empty = plotters_help.all_hosts_df(it, host_number)
 
-        if (counter // 4 == 0):  # i could make this a function... we'll see....
+        if (counter // 3 == 0):  # i could make this a function... we'll see....
             if (host_number == 16):
                 df1_2["Double scale"] = it["cpuUsage"]
             elif (host_number == 8):
                 df1_2["Base scale"] = it["cpuUsage"]
             elif (host_number == 4):
                 df1_2["Half scale"] = it["cpuUsage"]
-        elif (counter // 4 == 1):
+        elif (counter // 3 == 1):
             if (host_number == 16):
                 df3_4["Double scale"] = it["cpuUsage"]
             elif (host_number == 8):
                 df3_4["Base scale"] = it["cpuUsage"]
             elif (host_number == 4):
                 df3_4["Half scale"] = it["cpuUsage"]
-        elif (counter // 4 == 2):
+        elif (counter // 3 == 2):
             if (host_number == 16):
                 df5_6["Double scale"] = it["cpuUsage"]
             elif (host_number == 8):
                 df5_6["Base scale"] = it["cpuUsage"]
             elif (host_number == 4):
                 df5_6["Half scale"] = it["cpuUsage"]
-        elif (counter // 4 == 3):
+        elif (counter // 3 == 3):
             if (host_number == 16):
                 df7_8["Double scale"] = it["cpuUsage"]
             elif (host_number == 8):
                 df7_8["Base scale"] = it["cpuUsage"]
             elif (host_number == 4):
                 df7_8["Half scale"] = it["cpuUsage"]
-        elif (counter // 4 == 4):
+        elif (counter // 3 == 4):
             if (host_number == 16):
                 df9_10["Double scale"] = it["cpuUsage"]
             elif (host_number == 8):
@@ -212,7 +212,7 @@ def cdf_plots(list, name):
             lab += " Random"
             mark = "v"
         it = plotters_help.convert_to_cdf(it)
-        arr = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+        arr = [100, 200, 300, 400, 500, 600, 700, 800]
         plt.plot(it["Time (s)"], it["Percentage of completion"], label=lab, marker=mark, markevery=arr)
 
         it_number += 1
@@ -314,7 +314,7 @@ def performance_per_KWH(list, time_list, gflop, name):
         calculated_list.append(it)
 
         # horrible horrible horrible if nests
-        if (counter_time // 4 == 0):
+        if (counter_time // 3 == 0):
             if (host_number_arr[counter_time] == 16):
                 it['cpu/energy'] = np.where(it['cpuUsage'] < 0.0001, it['cpuUsage'], 16 * gflop / it['Energy'])
                 dfmax_min["Double scale"] = it["cpu/energy"]
@@ -324,7 +324,7 @@ def performance_per_KWH(list, time_list, gflop, name):
             elif (host_number_arr[counter_time] == 4):
                 it['cpu/energy'] = np.where(it['cpuUsage'] < 0.0001, it['cpuUsage'], 4 * gflop / it['Energy'])
                 dfmax_min["Half scale"] = it["cpu/energy"]
-        elif (counter_time // 4 == 1):
+        elif (counter_time // 3 == 1):
             if (host_number_arr[counter_time] == 16):
                 it['cpu/energy'] = np.where(it['cpuUsage'] < 0.0001, it['cpuUsage'], 16 * gflop / it['Energy'])
                 dfmin_min["Double scale"] = it["cpu/energy"]
@@ -334,7 +334,7 @@ def performance_per_KWH(list, time_list, gflop, name):
             elif (host_number_arr[counter_time] == 4):
                 it['cpu/energy'] = np.where(it['cpuUsage'] < 0.0001, it['cpuUsage'], 4 * gflop / it['Energy'])
                 dfmin_min["Half scale"] = it["cpu/energy"]
-        elif (counter_time // 4 == 2):
+        elif (counter_time // 3 == 2):
             if (host_number_arr[counter_time] == 16):
                 it['cpu/energy'] = np.where(it['cpuUsage'] < 0.0001, it['cpuUsage'], 16 * gflop / it['Energy'])
                 dfelop["Double scale"] = it["cpu/energy"]
@@ -344,7 +344,7 @@ def performance_per_KWH(list, time_list, gflop, name):
             elif (host_number_arr[counter_time] == 4):
                 it['cpu/energy'] = np.where(it['cpuUsage'] < 0.0001, it['cpuUsage'], 4 * gflop / it['Energy'])
                 dfelop["Half scale"] = it["cpu/energy"]
-        elif (counter_time // 4 == 3):
+        elif (counter_time // 3 == 3):
             if (host_number_arr[counter_time] == 16):
                 it['cpu/energy'] = np.where(it['cpuUsage'] < 0.0001, it['cpuUsage'], 16 * gflop / it['Energy'])
                 dfheft["Double scale"] = it["cpu/energy"]
@@ -354,7 +354,7 @@ def performance_per_KWH(list, time_list, gflop, name):
             elif (host_number_arr[counter_time] == 4):
                 it['cpu/energy'] = np.where(it['cpuUsage'] < 0.0001, it['cpuUsage'], 4 * gflop / it['Energy'])
                 dfheft["Half scale"] = it["cpu/energy"]
-        elif (counter_time // 4 == 4):
+        elif (counter_time // 3 == 4):
             if (host_number_arr[counter_time] == 16):
                 it['cpu/energy'] = np.where(it['cpuUsage'] < 0.0001, it['cpuUsage'], 16 * gflop / it['Energy'])
                 dfrandom["Double scale"] = it["cpu/energy"]
