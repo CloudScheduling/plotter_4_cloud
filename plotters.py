@@ -3,6 +3,7 @@ import numpy as np
 import seaborn as sb
 import pandas as pd
 import plotters_help
+from DataTransformer import get_trailing_int
 
 
 def energy_plots(data, meta):
@@ -18,7 +19,7 @@ def energy_plots(data, meta):
             axs[axs_idx].tick_params(labelsize=6)
 
     # Extra labels
-    middle_idx = int(len(axis_mapping)/2)
+    middle_idx = int(len(axis_mapping) / 2)
     axs[middle_idx].set_ylabel("Energy consumption(W)")
     axs[-1].set_xlabel("Time (minutes)")
     axs[0].legend(loc="upper right")
@@ -182,7 +183,7 @@ def makespan_plot(list, name):
     counter = 0
 
     data_req = (
-                len(list) // 3)  # DO INTEGER DIV since there are three different scales... has to edited if we scale up... shit code my bad
+            len(list) // 3)  # DO INTEGER DIV since there are three different scales... has to edited if we scale up... shit code my bad
 
     for i in range(0, data_req):
         df_combo = pd.DataFrame()
@@ -314,3 +315,17 @@ def performance_per_KWH(list, time_list, gflop, name):
 
     plt.savefig("img2/" + name + ".png")
     pass
+
+
+def create_makespan_cdf(data, meta):
+    order_plots = meta["order_plots"]
+    fig, axs = plt.subplots(1, len(data), figsize=(5 * len(data), 5))
+
+    # TODO: order needed -> mapping in meta
+    for ax, scale_name in zip(axs, order_plots):
+        scale = data[scale_name]
+        sb.histplot(data=scale, element="step", fill=False, cumulative=True, stat="density", common_norm=False, ax=ax)
+        ax.set_xlabel("Workflow makespan [s]")
+        ax.set_ylabel("ECDF")
+        ax.set_title(f"Scale: {get_trailing_int(scale_name)}")
+    plt.savefig(meta["file_name"])

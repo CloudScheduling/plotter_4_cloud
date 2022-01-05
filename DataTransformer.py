@@ -67,7 +67,6 @@ class DataTransformer:
 
         return filtered_data, meta
 
-
     def to_energy_bar(self):
         pass
 
@@ -82,6 +81,25 @@ class DataTransformer:
 
     def to_performance_plot(self):
         pass
+
+    def to_makespan_cdf(self, trace_key, environment_key, file_name):
+        meta = {
+            "file_name": file_name,
+        }
+        filtered_data = {}
+
+        for policy_name, policy in self.data[trace_key].items():
+            for scale_name, scale in policy[environment_key].items():
+                if scale_name not in filtered_data:
+                    filtered_data[scale_name] = {}
+                filtered_data[scale_name][policy_name] = scale[self.makespan_file_key].rename(columns={"Makespan (s)": "makespan"})["makespan"]
+
+        # make sure to have ascending order of scales
+        order_plots = list(filtered_data.keys())
+        order_plots.sort(key=lambda x: get_trailing_int(x))
+        meta["order_plots"] = order_plots
+
+        return filtered_data, meta
 
     def to_utilization_table(self, trace_key, environment_key, file_name):
         """
