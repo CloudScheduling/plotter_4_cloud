@@ -82,7 +82,7 @@ class DataTransformer:
     def to_performance_plot(self):
         pass
 
-    def to_makespan_cdf(self, trace_key, environment_key, file_name):
+    def to_makespan_cdf_per_scale(self, trace_key, environment_key, file_name):
         meta = {
             "file_name": file_name,
         }
@@ -98,6 +98,20 @@ class DataTransformer:
         order_plots = list(filtered_data.keys())
         order_plots.sort(key=lambda x: get_trailing_int(x))
         meta["order_plots"] = order_plots
+
+        return filtered_data, meta
+
+    def to_makespan_cdf_per_policy(self, trace_key, environment_key, file_name):
+        meta = {
+            "file_name": file_name,
+        }
+        filtered_data = {}
+
+        for policy_name, policy in self.data[trace_key].items():
+            if policy_name not in filtered_data:
+                filtered_data[policy_name] = {}
+            for scale_name, scale in policy[environment_key].items():
+                filtered_data[policy_name][scale_name] = scale[self.makespan_file_key].rename(columns={"Makespan (s)": "makespan"})["makespan"]
 
         return filtered_data, meta
 

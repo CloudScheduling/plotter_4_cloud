@@ -317,7 +317,7 @@ def performance_per_KWH(list, time_list, gflop, name):
     pass
 
 
-def create_makespan_cdf(data, meta):
+def create_makespan_cdf_order_scale(data, meta):
     order_plots = meta["order_plots"]
     fig, axs = plt.subplots(1, len(data), figsize=(5 * len(data), 5))
 
@@ -328,4 +328,15 @@ def create_makespan_cdf(data, meta):
         ax.set_xlabel("Workflow makespan [s]")
         ax.set_ylabel("ECDF")
         ax.set_title(f"Scale: {get_trailing_int(scale_name)}")
+    plt.savefig(meta["file_name"])
+
+def create_makespan_cdf_order_policy(data, meta):
+    fig, axs = plt.subplots(1, len(data), figsize=(5 * len(data), 5))
+
+    # TODO: order needed -> mapping in meta
+    for ax, (policy_name, policy) in zip(axs, data.items()):
+        sb.histplot(data=policy, element="step", fill=False, cumulative=True, stat="density", common_norm=False, ax=ax)
+        ax.set_xlabel("Workflow makespan [s]")
+        ax.set_ylabel("ECDF")
+        ax.set_title(policy_name)
     plt.savefig(meta["file_name"])
