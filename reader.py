@@ -41,10 +41,11 @@ def sort_dfs():  # calls the readers and sorts dataframes into correct arrays
     maxmin_path = "Max-Min/specTrace2_maxMin_"
     minmin_path = "Min-Min/specTrace2_minMin_"
     elop_path = "ELOP/specTrace2_elop_"
+    heft_path = "HEFT/specTrace2_HEFT_"
     random_path = "Random/specTrace2_random_"  # add paths for all data, should be this format
 
     # just add the path here if you want to include it in the mapping
-    path_arr = [maxmin_path, minmin_path, elop_path, random_path]
+    path_arr = [maxmin_path, minmin_path, elop_path, heft_path, random_path]
 
     performance_het = []
     performance_homog = []
