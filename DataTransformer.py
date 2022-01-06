@@ -197,6 +197,22 @@ class DataTransformer:
 
         return filtered_data, meta
 
+    def to_makespan_cdf_per_environment(self, trace_key, scale_key, file_name):
+        meta = {
+            "file_name": file_name,
+        }
+        filtered_data = {}
+
+        for policy_name, policy in self.data[trace_key].items():
+            for env_name, env in policy.items():
+                if env_name not in filtered_data:
+                    filtered_data[env_name] = {}
+
+                makespanDf = env[scale_key][self.makespan_file_key]
+                filtered_data[env_name][policy_name] = makespanDf.rename(columns={"Makespan (s)": "makespan"})["makespan"]
+
+        return filtered_data, meta
+
     def __create_sorted_scale_list(self, keys):
         # make sure to have ascending order of scales
         order_plots = list(keys)
