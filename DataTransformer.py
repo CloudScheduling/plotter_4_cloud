@@ -135,17 +135,7 @@ class DataTransformer:
         for policy_name, policy in self.data[trace_key].items():
             filtered_data = filtered_data.append({"policy": policy_name}, ignore_index=True)
             for scale_name, scale in policy[environment_key].items():
-                df = scale[self.metrics_file_key][
-                    ["Timestamp(s)", "cpuUsage(CPU usage of all CPUs of the host in MHz)"]]
-                df = df.rename(columns={
-                    "Timestamp(s)": "timestamp",
-                    "cpuUsage(CPU usage of all CPUs of the host in MHz)": "cpuUsage",
-                })
-                host_df = scale[self.hostInfo_file_key]
-                maxCapacity = host_df[["maxCapacity(MHz)"]].sum().values[0]
-                df = df.groupby("timestamp").sum()
-                df["cpuUsage"] = df["cpuUsage"].apply(lambda absoluteUsage: absoluteUsage / maxCapacity)
-                mean = df["cpuUsage"].mean()
+                mean = self.__calculateMeanUtilization(scale[self.metrics_file_key], scale[self.hostInfo_file_key])
 
                 scale_num = get_trailing_int(scale_name)
                 if scale_num not in filtered_data.columns:
@@ -172,18 +162,9 @@ class DataTransformer:
                 total_energy_usage = self.__calculateTotalEnergyUsage(variable_df, metrics_df)
 
                 df_energy = df_energy.append(
-                    {"scale": get_trailing_int(scale_name), "energyUsage (kWh)": total_energy_usage}, ignore_index=True)
+                    {"scale": get_trailing_int(scale_name), "energyUsage": total_energy_usage}, ignore_index=True)
             df_energy = df_energy.sort_values(by=["scale"])
             filtered_data[policy_name] = df_energy
-
-        return filtered_data, meta
-
-    def to_utilization_table_environment(self, trace_key, scale_key, file_name):
-        meta = {}
-        filtered_data = pd.DataFrame(columns=[])
-
-        #for policy_name, policy in self.data[trace_key].items():
-
 
         return filtered_data, meta
 
@@ -223,6 +204,25 @@ class DataTransformer:
 
         return filtered_data, meta
 
+    def to_utilization_table_environment(self, trace_key, scale_key, file_name):
+        filtered_data = pd.DataFrame(columns=["policy"])
+
+        meta = {
+            "file_name": file_name,
+        }
+
+        for policy_name, policy in self.data[trace_key].items():
+            filtered_data = filtered_data.append({"policy": policy_name}, ignore_index=True)
+            for env_name, env in policy.items():
+                if env_name not in filtered_data.columns:
+                    filtered_data[env_name] = -1
+                metrics_df = env[scale_key][self.metrics_file_key]
+                host_df = env[scale_key][self.hostInfo_file_key]
+                filtered_data.loc[filtered_data["policy"] == policy_name, env_name] = self.__calculateMeanUtilization(metrics_df, host_df)
+        filtered_data = filtered_data.set_index("policy")
+
+        return filtered_data, meta
+
     def __create_sorted_scale_list(self, keys):
         # make sure to have ascending order of scales
         order_plots = list(keys)
@@ -244,3 +244,21 @@ class DataTransformer:
         totalEnergyUsage /= (1000 * 3600)  # convert to kWh (1000 for k, 3600 for h)
 
         return totalEnergyUsage
+
+    def __calculateMeanUtilization(self, metrics_df, host_df):
+        """
+        Utilization is the mean utilization over all points in time where there was something captured (relative)
+        :param metrics_df:
+        :param host_df:
+        :return:
+        """
+        df = metrics_df[
+            ["Timestamp(s)", "cpuUsage(CPU usage of all CPUs of the host in MHz)"]]
+        df = df.rename(columns={
+            "Timestamp(s)": "timestamp",
+            "cpuUsage(CPU usage of all CPUs of the host in MHz)": "cpuUsage",
+        })
+        max_capacity = host_df[["maxCapacity(MHz)"]].sum().values[0]
+        df = df.groupby("timestamp").sum()
+        df["cpuUsage"] = df["cpuUsage"].apply(lambda absoluteUsage: absoluteUsage / max_capacity)
+        return df["cpuUsage"].mean()
