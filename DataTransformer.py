@@ -167,22 +167,12 @@ class DataTransformer:
             df_energy = pd.DataFrame(columns=["scale", "energyUsage"])
 
             for scale_name, scale in policy[environment_key].items():
-                variableStore = scale[self.variableStore_file_key]
-                readOutInterval = variableStore[variableStore["variable"] == "readOutInterval"]["value"].array[0]
-                readOutInterval /= 60  # convert to minutes
-
-                # we capture for every machine it's current energy consumption EC.
-                # if we EC * readOutInterval, we will get the EC over a period of EC.
-                # summing all these values up gives roughly the total energy consumption
-                energyUsageDf = scale[self.metrics_file_key].rename(
-                    columns={"energyUsage(Power usage of the host in W)": "energyUsage (kWh)"})[
-                    ["Timestamp(s)", "energyUsage (kWh)"]]
-                energyUsageDf = energyUsageDf.groupby("Timestamp(s)").sum()
-                totalEnergyUsage = (energyUsageDf["energyUsage (kWh)"] * readOutInterval).sum()  # unit: Ws
-                totalEnergyUsage /= (1000 * 3600)  # convert to kWh (1000 for k, 3600 for h)
+                metrics_df = scale[self.metrics_file_key]
+                variable_df = scale[self.variableStore_file_key]
+                total_energy_usage = self.__calculateTotalEnergyUsage(variable_df, metrics_df)
 
                 df_energy = df_energy.append(
-                    {"scale": get_trailing_int(scale_name), "energyUsage (kWh)": totalEnergyUsage}, ignore_index=True)
+                    {"scale": get_trailing_int(scale_name), "energyUsage (kWh)": total_energy_usage}, ignore_index=True)
             df_energy = df_energy.sort_values(by=["scale"])
             filtered_data[policy_name] = df_energy
 
@@ -208,8 +198,8 @@ class DataTransformer:
                 if env_name not in filtered_data:
                     filtered_data[env_name] = {}
 
-                makespanDf = env[scale_key][self.makespan_file_key]
-                filtered_data[env_name][policy_name] = makespanDf.rename(columns={"Makespan (s)": "makespan"})["makespan"]
+                makespan_df = env[scale_key][self.makespan_file_key]
+                filtered_data[env_name][policy_name] = makespan_df.rename(columns={"Makespan (s)": "makespan"})["makespan"]
 
         return filtered_data, meta
 
@@ -218,3 +208,19 @@ class DataTransformer:
         order_plots = list(keys)
         order_plots.sort(key=lambda x: get_trailing_int(x))
         return order_plots
+
+    def __calculateTotalEnergyUsage(self, variable_df, metrics_df):
+        readOutInterval = variable_df[variable_df["variable"] == "readOutInterval"]["value"].array[0]
+        readOutInterval /= 60  # convert to minutes
+
+        # we capture for every machine it's current energy consumption EC.
+        # if we EC * readOutInterval, we will get the EC over a period of EC.
+        # summing all these values up gives roughly the total energy consumption
+        energyUsageDf = metrics_df.rename(
+            columns={"energyUsage(Power usage of the host in W)": "energyUsage (kWh)"})[
+            ["Timestamp(s)", "energyUsage (kWh)"]]
+        energyUsageDf = energyUsageDf.groupby("Timestamp(s)").sum()
+        totalEnergyUsage = (energyUsageDf["energyUsage (kWh)"] * readOutInterval).sum()  # unit: Ws
+        totalEnergyUsage /= (1000 * 3600)  # convert to kWh (1000 for k, 3600 for h)
+
+        return totalEnergyUsage
