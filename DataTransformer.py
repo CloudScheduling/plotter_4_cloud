@@ -23,6 +23,7 @@ class DataTransformer:
     taskOvertime_file_key = "taksOvertime"
     metrics_file_key = "metrics"
     hostInfo_file_key = "hostInfo"
+    variableStore_file_key = "variableStore"
 
     def __init__(self, data) -> None:
         super().__init__()
@@ -95,9 +96,7 @@ class DataTransformer:
                 filtered_data[scale_name][policy_name] = scale[self.makespan_file_key].rename(columns={"Makespan (s)": "makespan"})["makespan"]
 
         # make sure to have ascending order of scales
-        order_plots = list(filtered_data.keys())
-        order_plots.sort(key=lambda x: get_trailing_int(x))
-        meta["order_plots"] = order_plots
+        meta["order_plots"] = self.__create_sorted_scale_list(filtered_data.keys())
 
         return filtered_data, meta
 
@@ -123,7 +122,9 @@ class DataTransformer:
         :param file_name:
         :return:
         """
-        meta = {}
+        meta = {
+            "file_name": file_name
+        }
 
 
         # filtering
@@ -149,3 +150,40 @@ class DataTransformer:
         filtered_data = filtered_data.set_index("policy")
         filtered_data = filtered_data.reindex(sorted(filtered_data.columns), axis=1)
         return filtered_data, meta
+
+    def to_electricity_scale(self, trace_key, environment_key, file_name):
+        meta = {
+            "file_name": file_name,
+        }
+        filtered_data = {}
+
+        for policy_name, policy in self.data[trace_key].items():
+            if policy_name not in filtered_data:
+                filtered_data[policy_name] = {}
+            df_energy = pd.DataFrame(columns=["scale", "energyUsage"])
+
+            for scale_name, scale in policy[environment_key].items():
+                variableStore = scale[self.variableStore_file_key]
+                readOutInterval = variableStore[variableStore["variable"] == "readOutInterval"]["value"].array[0]
+                readOutInterval /= 60  # convert to minutes
+
+                # we capture for every machine it's current energy consumption EC.
+                # if we EC * readOutInterval, we will get the EC over a period of EC.
+                # summing all these values up gives roughly the total energy consumption
+                energyUsageDf = scale[self.metrics_file_key].rename(columns={"energyUsage(Power usage of the host in W)": "energyUsage (kWh)"})[["Timestamp(s)", "energyUsage (kWh)"]]
+                energyUsageDf = energyUsageDf.groupby("Timestamp(s)").sum()
+                totalEnergyUsage = (energyUsageDf["energyUsage (kWh)"] * readOutInterval).sum() # unit: Ws
+                totalEnergyUsage /= (1000*3600)  # convert to kWh (1000 for k, 3600 for h)
+
+                df_energy = df_energy.append({"scale": get_trailing_int(scale_name), "energyUsage (kWh)": totalEnergyUsage}, ignore_index=True)
+            df_energy = df_energy.sort_values(by=["scale"])
+            filtered_data[policy_name] = df_energy
+
+        return filtered_data, meta
+
+
+    def __create_sorted_scale_list(self, keys):
+        # make sure to have ascending order of scales
+        order_plots = list(keys)
+        order_plots.sort(key=lambda x: get_trailing_int(x))
+        return order_plots

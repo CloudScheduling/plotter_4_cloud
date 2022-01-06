@@ -330,6 +330,7 @@ def create_makespan_cdf_order_scale(data, meta):
         ax.set_title(f"Scale: {get_trailing_int(scale_name)}")
     plt.savefig(meta["file_name"])
 
+
 def create_makespan_cdf_order_policy(data, meta):
     fig, axs = plt.subplots(1, len(data), figsize=(5 * len(data), 5))
 
@@ -339,4 +340,10 @@ def create_makespan_cdf_order_policy(data, meta):
         ax.set_xlabel("Workflow makespan [s]")
         ax.set_ylabel("ECDF")
         ax.set_title(policy_name)
+    plt.savefig(meta["file_name"])
+
+
+def create_energy_plot_scale(data, meta):
+    for policy in data.values():
+        sb.lineplot(x=policy["scale"], y=policy["energyUsage (kWh)"])
     plt.savefig(meta["file_name"])
