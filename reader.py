@@ -30,7 +30,7 @@ def sort_dfs(paths):
                 exptected_number_tokens = 5  # [policy, trace, kind, scale, file_kind]
                 if len(tokens) != exptected_number_tokens:
                     raise RuntimeError(
-                        f"Error splitting name of {file}: only {len(tokens)} tokens found, expected {exptected_number_tokens}")
+                        f"Error splitting name of {file}: found {len(tokens)} tokens, expected {exptected_number_tokens}")
 
                 # create missing keys recursively
                 temp_data_ref = final_data

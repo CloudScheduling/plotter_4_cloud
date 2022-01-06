@@ -63,8 +63,10 @@ class DataTransformer:
                 metrics_df = scale[self.metrics_file_key]
                 # transformation of the actual dataframe
                 df_needed_columns = metrics_df[["Timestamp(s)", "energyUsage(Power usage of the host in W)"]]
-                df_needed_columns = df_needed_columns.rename(columns={"Timestamp(s)": "timestamp", "energyUsage(Power usage of the host in W)": "energyUsage"})
-                filtered_data[policy_name][scale_name] = df_needed_columns.groupby(["timestamp"]).sum() # file provides information per host, we need over all hosts
+                df_needed_columns = df_needed_columns.rename(
+                    columns={"Timestamp(s)": "timestamp", "energyUsage(Power usage of the host in W)": "energyUsage"})
+                filtered_data[policy_name][scale_name] = df_needed_columns.groupby(
+                    ["timestamp"]).sum()  # file provides information per host, we need over all hosts
 
         return filtered_data, meta
 
@@ -93,7 +95,8 @@ class DataTransformer:
             for scale_name, scale in policy[environment_key].items():
                 if scale_name not in filtered_data:
                     filtered_data[scale_name] = {}
-                filtered_data[scale_name][policy_name] = scale[self.makespan_file_key].rename(columns={"Makespan (s)": "makespan"})["makespan"]
+                filtered_data[scale_name][policy_name] = \
+                scale[self.makespan_file_key].rename(columns={"Makespan (s)": "makespan"})["makespan"]
 
         # make sure to have ascending order of scales
         meta["order_plots"] = self.__create_sorted_scale_list(filtered_data.keys())
@@ -110,7 +113,8 @@ class DataTransformer:
             if policy_name not in filtered_data:
                 filtered_data[policy_name] = {}
             for scale_name, scale in policy[environment_key].items():
-                filtered_data[policy_name][scale_name] = scale[self.makespan_file_key].rename(columns={"Makespan (s)": "makespan"})["makespan"]
+                filtered_data[policy_name][scale_name] = \
+                scale[self.makespan_file_key].rename(columns={"Makespan (s)": "makespan"})["makespan"]
 
         return filtered_data, meta
 
@@ -126,13 +130,13 @@ class DataTransformer:
             "file_name": file_name
         }
 
-
         # filtering
         filtered_data = pd.DataFrame(columns=["policy"])
         for policy_name, policy in self.data[trace_key].items():
             filtered_data = filtered_data.append({"policy": policy_name}, ignore_index=True)
             for scale_name, scale in policy[environment_key].items():
-                df = scale[self.metrics_file_key][["Timestamp(s)", "cpuUsage(CPU usage of all CPUs of the host in MHz)"]]
+                df = scale[self.metrics_file_key][
+                    ["Timestamp(s)", "cpuUsage(CPU usage of all CPUs of the host in MHz)"]]
                 df = df.rename(columns={
                     "Timestamp(s)": "timestamp",
                     "cpuUsage(CPU usage of all CPUs of the host in MHz)": "cpuUsage",
@@ -140,7 +144,7 @@ class DataTransformer:
                 host_df = scale[self.hostInfo_file_key]
                 maxCapacity = host_df[["maxCapacity(MHz)"]].sum().values[0]
                 df = df.groupby("timestamp").sum()
-                df["cpuUsage"] = df["cpuUsage"].apply(lambda absoluteUsage : absoluteUsage / maxCapacity)
+                df["cpuUsage"] = df["cpuUsage"].apply(lambda absoluteUsage: absoluteUsage / maxCapacity)
                 mean = df["cpuUsage"].mean()
 
                 scale_num = get_trailing_int(scale_name)
@@ -170,17 +174,28 @@ class DataTransformer:
                 # we capture for every machine it's current energy consumption EC.
                 # if we EC * readOutInterval, we will get the EC over a period of EC.
                 # summing all these values up gives roughly the total energy consumption
-                energyUsageDf = scale[self.metrics_file_key].rename(columns={"energyUsage(Power usage of the host in W)": "energyUsage (kWh)"})[["Timestamp(s)", "energyUsage (kWh)"]]
+                energyUsageDf = scale[self.metrics_file_key].rename(
+                    columns={"energyUsage(Power usage of the host in W)": "energyUsage (kWh)"})[
+                    ["Timestamp(s)", "energyUsage (kWh)"]]
                 energyUsageDf = energyUsageDf.groupby("Timestamp(s)").sum()
-                totalEnergyUsage = (energyUsageDf["energyUsage (kWh)"] * readOutInterval).sum() # unit: Ws
-                totalEnergyUsage /= (1000*3600)  # convert to kWh (1000 for k, 3600 for h)
+                totalEnergyUsage = (energyUsageDf["energyUsage (kWh)"] * readOutInterval).sum()  # unit: Ws
+                totalEnergyUsage /= (1000 * 3600)  # convert to kWh (1000 for k, 3600 for h)
 
-                df_energy = df_energy.append({"scale": get_trailing_int(scale_name), "energyUsage (kWh)": totalEnergyUsage}, ignore_index=True)
+                df_energy = df_energy.append(
+                    {"scale": get_trailing_int(scale_name), "energyUsage (kWh)": totalEnergyUsage}, ignore_index=True)
             df_energy = df_energy.sort_values(by=["scale"])
             filtered_data[policy_name] = df_energy
 
         return filtered_data, meta
 
+    def to_utilization_table_environment(self, trace_key, scale_key, file_name):
+        meta = {}
+        filtered_data = pd.DataFrame(columns=[])
+
+        #for policy_name, policy in self.data[trace_key].items():
+
+
+        return filtered_data, meta
 
     def __create_sorted_scale_list(self, keys):
         # make sure to have ascending order of scales

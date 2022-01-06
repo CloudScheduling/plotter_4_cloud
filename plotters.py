@@ -334,6 +334,17 @@ def create_makespan_cdf_order_scale(data, meta):
 def create_makespan_cdf_order_policy(data, meta):
     fig, axs = plt.subplots(1, len(data), figsize=(5 * len(data), 5))
 
+    # single policy breaks the loop -> do seperately
+    if len(data) == 1:
+        for policy_name, policy in data.items():
+            sb.histplot(data=policy, element="step", fill=False, cumulative=True, stat="density", common_norm=False,
+                        ax=axs)
+            axs.set_xlabel("Workflow makespan [s]")
+            axs.set_ylabel("ECDF")
+            axs.set_title(policy_name)
+        plt.savefig(meta["file_name"])
+        return
+
     # TODO: order needed -> mapping in meta
     for ax, (policy_name, policy) in zip(axs, data.items()):
         sb.histplot(data=policy, element="step", fill=False, cumulative=True, stat="density", common_norm=False, ax=ax)
