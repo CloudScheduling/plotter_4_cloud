@@ -371,6 +371,20 @@ def create_energy_plot_env(data, meta):
     g.legend.set_title("")
     plt.savefig(meta["file_name"])
 
+def create_usage_table_per_env(data, meta):
+    fig, ax = plt.subplots()
+    #hide the axes
+    fig.patch.set_visible(False)
+    ax.axis('off')
+    ax.axis('tight')
+
+
+    #create table
+    table = ax.table(cellText=data.values, colLabels=data.columns, loc='center')
+    fig.figsize=(100, 100) # This increases resolution
+    #display table
+    fig.tight_layout()
+    plt.savefig(meta["file_name"], dpi=900)
 
 def create_energy_per_workload(data, meta, policies):
     dataframe2 = pd.DataFrame()
