@@ -223,6 +223,47 @@ class DataTransformer:
 
         return filtered_data, meta
 
+    def to_makespan_cdf_per_workload(self):
+        pass
+
+    def to_energy_exp_workload(self):
+        pass
+
+    def to_utilization_table_workload(self, environment_key, scale_key, file_name):
+        filtered_data = pd.DataFrame(columns=["policy"])
+
+        meta = {
+            "file_name": file_name,
+        }
+
+        for trace_name, trace in self.data.items():
+            filtered_data[trace_name] = -1
+            for policy_name, policy in trace.items():
+                if policy_name not in filtered_data["policy"].values:
+                    filtered_data = filtered_data.append({"policy": policy_name}, ignore_index=True)
+
+                metrics_df = policy[environment_key][scale_key][self.metrics_file_key]
+                host_df = policy[environment_key][scale_key][self.hostInfo_file_key]
+                filtered_data.loc[filtered_data["policy"] == policy_name, trace_name] = self.__calculateMeanUtilization(
+                    metrics_df, host_df)
+        filtered_data = filtered_data.set_index("policy")
+
+        return filtered_data, meta
+
+    def to_makespan_cdf_per_workflow(self, environment_key, scale_key, file_name):
+        meta = {
+            "file_name": file_name,
+        }
+        filtered_data = {}
+
+        for trace_name, trace in self.data.items():
+            filtered_data[trace_name] = {}
+            for policy_name, policy in trace.items():
+                makespan_df = policy[environment_key][scale_key][self.makespan_file_key]
+                filtered_data[trace_name][policy_name] = makespan_df.rename(columns={"Makespan (s)": "makespan"})["makespan"]
+
+        return filtered_data, meta
+
     def __create_sorted_scale_list(self, keys):
         # make sure to have ascending order of scales
         order_plots = list(keys)
