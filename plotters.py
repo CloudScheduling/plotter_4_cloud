@@ -371,3 +371,13 @@ def create_energy_plot_env(data, meta):
     g.legend.set_title("")
     plt.savefig(meta["file_name"])
 
+def create_energy_plot_workload(data, meta):
+    g = sb.catplot(
+        data=data, kind="bar",
+        x="trace", y="energyUsage", hue="policy",
+        ci="sd", palette="dark", alpha=.6, height=6
+    )
+    g.despine(left=True)
+    g.set_axis_labels("", "Energy usage (kWh)")
+    g.legend.set_title("")
+    plt.savefig(meta["file_name"])
