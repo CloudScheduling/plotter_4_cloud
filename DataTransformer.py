@@ -127,22 +127,21 @@ class DataTransformer:
         meta = {
             "file_name": file_name,
         }
-        filtered_data = {}
+        filtered_data = pd.DataFrame(columns=["policy", "scale", "energyUsage"])
 
         for policy_name, policy in self.data[trace_key].items():
-            if policy_name not in filtered_data:
-                filtered_data[policy_name] = {}
-            df_energy = pd.DataFrame(columns=["scale", "energyUsage"])
-
             for scale_name, scale in policy[environment_key].items():
                 metrics_df = scale[self.metrics_file_key]
                 variable_df = scale[self.variableStore_file_key]
                 total_energy_usage = self.__calculateTotalEnergyUsage(variable_df, metrics_df)
 
-                df_energy = df_energy.append(
-                    {"scale": get_trailing_int(scale_name), "energyUsage": total_energy_usage}, ignore_index=True)
-            df_energy = df_energy.sort_values(by=["scale"])
-            filtered_data[policy_name] = df_energy
+                filtered_data = filtered_data.append(
+                    {
+                        "policy": policy_name,
+                        "scale": get_trailing_int(scale_name),
+                        "energyUsage": total_energy_usage,
+                    }, ignore_index=True)
+            filtered_data = filtered_data.sort_values(by=["scale"])
 
         return filtered_data, meta
 

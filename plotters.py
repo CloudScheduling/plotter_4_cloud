@@ -355,8 +355,7 @@ def create_makespan_cdf_order_policy(data, meta):
 
 
 def create_energy_plot_scale(data, meta):
-    for policy in data.values():
-        sb.lineplot(x=policy["scale"], y=policy["energyUsage"])
+    sb.lineplot(data=data, x="scale", y="energyUsage", hue="policy", legend="auto")
     plt.savefig(meta["file_name"])
 
 
