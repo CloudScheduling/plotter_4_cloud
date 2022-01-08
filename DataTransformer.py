@@ -70,21 +70,6 @@ class DataTransformer:
 
         return filtered_data, meta
 
-    def to_energy_bar(self):
-        pass
-
-    def to_usage_plot(self):
-        pass
-
-    def to_makespan_plot(self):
-        pass
-
-    def to_cdf_plot(self):
-        pass
-
-    def to_performance_plot(self):
-        pass
-
     def to_makespan_cdf_per_scale(self, trace_key, environment_key, file_name):
         meta = {
             "file_name": file_name,
@@ -96,7 +81,7 @@ class DataTransformer:
                 if scale_name not in filtered_data:
                     filtered_data[scale_name] = {}
                 filtered_data[scale_name][policy_name] = \
-                scale[self.makespan_file_key].rename(columns={"Makespan (s)": "makespan"})["makespan"]
+                    scale[self.makespan_file_key].rename(columns={"Makespan (s)": "makespan"})["makespan"]
 
         # make sure to have ascending order of scales
         meta["order_plots"] = self.__create_sorted_scale_list(filtered_data.keys())
@@ -114,18 +99,11 @@ class DataTransformer:
                 filtered_data[policy_name] = {}
             for scale_name, scale in policy[environment_key].items():
                 filtered_data[policy_name][scale_name] = \
-                scale[self.makespan_file_key].rename(columns={"Makespan (s)": "makespan"})["makespan"]
+                    scale[self.makespan_file_key].rename(columns={"Makespan (s)": "makespan"})["makespan"]
 
         return filtered_data, meta
 
     def to_utilization_table(self, trace_key, environment_key, file_name):
-        """
-
-        :param trace_key:
-        :param environment_key:
-        :param file_name:
-        :return:
-        """
         meta = {
             "file_name": file_name
         }
@@ -141,8 +119,8 @@ class DataTransformer:
                 if scale_num not in filtered_data.columns:
                     filtered_data[scale_num] = -1
                 filtered_data.loc[filtered_data["policy"] == policy_name, scale_num] = mean
-        #filtered_data = filtered_data.set_index("policy")
-        #filtered_data = filtered_data.reindex(sorted(filtered_data.columns), axis=1)
+        # filtered_data = filtered_data.set_index("policy")
+        # filtered_data = filtered_data.reindex(sorted(filtered_data.columns), axis=1)
         return filtered_data, meta
 
     def to_electricity_scale(self, trace_key, environment_key, file_name):
@@ -180,7 +158,8 @@ class DataTransformer:
                     filtered_data[env_name] = {}
 
                 makespan_df = env[scale_key][self.makespan_file_key]
-                filtered_data[env_name][policy_name] = makespan_df.rename(columns={"Makespan (s)": "makespan"})["makespan"]
+                filtered_data[env_name][policy_name] = makespan_df.rename(columns={"Makespan (s)": "makespan"})[
+                    "makespan"]
 
         return filtered_data, meta
 
@@ -218,13 +197,11 @@ class DataTransformer:
                     filtered_data[env_name] = -1
                 metrics_df = env[scale_key][self.metrics_file_key]
                 host_df = env[scale_key][self.hostInfo_file_key]
-                filtered_data.loc[filtered_data["policy"] == policy_name, env_name] = self.__calculateMeanUtilization(metrics_df, host_df)
-        #filtered_data = filtered_data.set_index("policy")
+                filtered_data.loc[filtered_data["policy"] == policy_name, env_name] = self.__calculateMeanUtilization(
+                    metrics_df, host_df)
+        # filtered_data = filtered_data.set_index("policy")
 
         return filtered_data, meta
-
-    def to_makespan_cdf_per_workload(self):
-        pass
 
     def to_utilization_table_workload(self, environment_key, scale_key, file_name):
         filtered_data = pd.DataFrame(columns=["policy"])
@@ -243,7 +220,7 @@ class DataTransformer:
                 host_df = policy[environment_key][scale_key][self.hostInfo_file_key]
                 filtered_data.loc[filtered_data["policy"] == policy_name, trace_name] = self.__calculateMeanUtilization(
                     metrics_df, host_df)
-        #filtered_data = filtered_data.set_index("policy")
+        # filtered_data = filtered_data.set_index("policy")
 
         return filtered_data, meta
 
@@ -257,7 +234,8 @@ class DataTransformer:
             filtered_data[trace_name] = {}
             for policy_name, policy in trace.items():
                 makespan_df = policy[environment_key][scale_key][self.makespan_file_key]
-                filtered_data[trace_name][policy_name] = makespan_df.rename(columns={"Makespan (s)": "makespan"})["makespan"]
+                filtered_data[trace_name][policy_name] = makespan_df.rename(columns={"Makespan (s)": "makespan"})[
+                    "makespan"]
 
         return filtered_data, meta
 
