@@ -334,11 +334,12 @@ def create_makespan_cdf_order_scale(data, meta):
 def create_makespan_cdf_order_policy(data, meta):
     fig, axs = plt.subplots(1, len(data), figsize=(5 * len(data), 5))
 
+
     # single policy breaks the loop -> do seperately
     if len(data) == 1:
-        for policy_name, policy in data.items():
+        for idx, (policy_name, policy) in enumerate(data.items()):
             sb.histplot(data=policy, element="step", fill=False, cumulative=True, stat="density", common_norm=False,
-                        ax=axs)
+                        ax=axs, legend=idx==len(data)-1)
             axs.set_xlabel("Workflow makespan [s]")
             axs.set_ylabel("ECDF")
             axs.set_title(policy_name)
@@ -346,8 +347,8 @@ def create_makespan_cdf_order_policy(data, meta):
         return
 
     # TODO: order needed -> mapping in meta
-    for ax, (policy_name, policy) in zip(axs, data.items()):
-        sb.histplot(data=policy, element="step", fill=False, cumulative=True, stat="density", common_norm=False, ax=ax)
+    for idx, (ax, (policy_name, policy)) in enumerate(zip(axs, data.items())):
+        sb.histplot(data=policy, element="step", fill=False, cumulative=True, stat="density", common_norm=False, ax=ax, legend=idx==len(data)-1)
         ax.set_xlabel("Workflow makespan [s]")
         ax.set_ylabel("ECDF")
         ax.set_title(policy_name)
@@ -379,4 +380,5 @@ def create_energy_plot_workload(data, meta):
     g.despine(left=True)
     g.set_axis_labels("", "Energy usage (kWh)")
     g.legend.set_title("")
+    plt.xticks(rotation=15)
     plt.savefig(meta["file_name"])

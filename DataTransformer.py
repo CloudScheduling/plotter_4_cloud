@@ -119,8 +119,8 @@ class DataTransformer:
                 if scale_num not in filtered_data.columns:
                     filtered_data[scale_num] = -1
                 filtered_data.loc[filtered_data["policy"] == policy_name, scale_num] = mean
-        # filtered_data = filtered_data.set_index("policy")
-        # filtered_data = filtered_data.reindex(sorted(filtered_data.columns), axis=1)
+        filtered_data = filtered_data.set_index("policy")
+        filtered_data = filtered_data.reindex(sorted(filtered_data.columns), axis=1)
         return filtered_data, meta
 
     def to_electricity_scale(self, trace_key, environment_key, file_name):
@@ -198,7 +198,7 @@ class DataTransformer:
                 host_df = env[scale_key][self.hostInfo_file_key]
                 filtered_data.loc[filtered_data["policy"] == policy_name, env_name] = self.__calculateMeanUtilization(
                     metrics_df, host_df)
-        # filtered_data = filtered_data.set_index("policy")
+        filtered_data = filtered_data.set_index("policy")
 
         return filtered_data, meta
 
@@ -219,7 +219,7 @@ class DataTransformer:
                 host_df = policy[environment_key][scale_key][self.hostInfo_file_key]
                 filtered_data.loc[filtered_data["policy"] == policy_name, trace_name] = self.__calculateMeanUtilization(
                     metrics_df, host_df)
-        # filtered_data = filtered_data.set_index("policy")
+        filtered_data = filtered_data.set_index("policy")
 
         return filtered_data, meta
 

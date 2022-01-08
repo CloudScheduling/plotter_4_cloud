@@ -51,3 +51,15 @@ def all_hosts_df(df, hosts):
     """
     length = len(df_us_arr)
     return new_df, length
+
+def latex_with_lines(df, *args, **kwargs):
+    kwargs['column_format'] = '|'.join([''] + ['c'] * df.index.nlevels
+                                            + ['c'] * df.shape[1] + [''])
+
+    columns = [r"\textbf{" + str(name) + r"}" for name in df.columns]
+    res = df.to_latex(*args, **kwargs, header=columns, escape=False)
+    res = res.replace('\\\\\n', '\\\\ \\hline\n')
+    res = res.replace('\\toprule', '\\hline')
+    res = res.replace('\\midrule', '')
+    res = res.replace('\\bottomrule', '')
+    return res.replace('\\\\\n', '\\\\ \\hline\n')
