@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="aad4d87c-c046-4532-be9f-4c45b0f2e60c" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/ELOP/specTrace2_elop_hetro_scale16_makespan.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ELOP/specTrace2_elop_hetro_scale16_metrics.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ELOP/specTrace2_elop_hetro_scale16_taksOvertime.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ELOP/specTrace2_elop_hetro_scale4_makespan.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ELOP/specTrace2_elop_hetro_scale4_metrics.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ELOP/specTrace2_elop_hetro_scale4_taksOvertime.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ELOP/specTrace2_elop_hetro_scale8_makespan.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ELOP/specTrace2_elop_hetro_scale8_metrics.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ELOP/specTrace2_elop_hetro_scale8_taksOvertime.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ELOP/specTrace2_elop_homo_scale16_makespan.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ELOP/specTrace2_elop_homo_scale16_metrics.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ELOP/specTrace2_elop_homo_scale16_taksOvertime.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ELOP/specTrace2_elop_homo_scale4_makespan.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ELOP/specTrace2_elop_homo_scale4_metrics.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ELOP/specTrace2_elop_homo_scale4_taksOvertime.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ELOP/specTrace2_elop_homo_scale8_makespan.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ELOP/specTrace2_elop_homo_scale8_metrics.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ELOP/specTrace2_elop_homo_scale8_taksOvertime.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Max-Min/specTrace2_maxMin_hetro_scale16_makespan.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Max-Min/specTrace2_maxMin_hetro_scale16_metrics.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Max-Min/specTrace2_maxMin_hetro_scale16_taksOvertime.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Max-Min/specTrace2_maxMin_hetro_scale4_makespan.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Max-Min/specTrace2_maxMin_hetro_scale4_metrics.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Max-Min/specTrace2_maxMin_hetro_scale4_taksOvertime.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Max-Min/specTrace2_maxMin_hetro_scale8_makespan.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Max-Min/specTrace2_maxMin_hetro_scale8_metrics.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Max-Min/specTrace2_maxMin_hetro_scale8_taksOvertime.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Max-Min/specTrace2_maxMin_homo_scale16_makespan.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Max-Min/specTrace2_maxMin_homo_scale16_metrics.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Max-Min/specTrace2_maxMin_homo_scale16_taksOvertime.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Max-Min/specTrace2_maxMin_homo_scale4_makespan.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Max-Min/specTrace2_maxMin_homo_scale4_metrics.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Max-Min/specTrace2_maxMin_homo_scale4_taksOvertime.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Max-Min/specTrace2_maxMin_homo_scale8_makespan.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Max-Min/specTrace2_maxMin_homo_scale8_metrics.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Max-Min/specTrace2_maxMin_homo_scale8_taksOvertime.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Min-Min/specTrace2_minMin_hetro_scale16_makespan.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Min-Min/specTrace2_minMin_hetro_scale16_metrics.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Min-Min/specTrace2_minMin_hetro_scale16_taksOvertime.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Min-Min/specTrace2_minMin_hetro_scale4_makespan.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Min-Min/specTrace2_minMin_hetro_scale4_metrics.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Min-Min/specTrace2_minMin_hetro_scale4_taksOvertime.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Min-Min/specTrace2_minMin_hetro_scale8_makespan.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Min-Min/specTrace2_minMin_hetro_scale8_metrics.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Min-Min/specTrace2_minMin_hetro_scale8_taksOvertime.csv" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="23POExcG9ypLtBjJzfBCrpWXVsk" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/Min-Min" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\scul\plotter_4_cloud\Min-Min" />
+      <recent name="C:\scul\plotter_4_cloud\Max-Min" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Users\MaximilianFloroiu\anaconda3\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="aad4d87c-c046-4532-be9f-4c45b0f2e60c" name="Changes" comment="" />
+      <created>1641632150250</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1641632150250</updated>
+      <workItem from="1641645710811" duration="538000" />
+      <workItem from="1641646273433" duration="1163000" />
+      <workItem from="1641661462849" duration="202000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
