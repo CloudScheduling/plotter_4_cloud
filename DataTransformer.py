@@ -264,6 +264,27 @@ class DataTransformer:
 
         return filtered_data, meta
 
+    def to_energy_exp_workload(self, environment_key, scale_key, file_name):
+        meta = {
+            "file_name": file_name
+        }
+        filtered_data = pd.DataFrame(columns=["policy", "trace", "energyUsage"])
+
+        for trace_name, trace in self.data.items():
+            for policy_name, policy in trace.items():
+                file_dict = policy[environment_key][scale_key]
+                variable_df = file_dict[self.variableStore_file_key]
+                metrics_df = file_dict[self.metrics_file_key]
+                total_energy = self.__calculateTotalEnergyUsage(variable_df, metrics_df)
+
+                filtered_data = filtered_data.append({
+                    "policy": policy_name,
+                    "trace": trace_name,
+                    "energyUsage": total_energy,
+                }, ignore_index=True)
+
+        return filtered_data, meta
+
     def __create_sorted_scale_list(self, keys):
         # make sure to have ascending order of scales
         order_plots = list(keys)

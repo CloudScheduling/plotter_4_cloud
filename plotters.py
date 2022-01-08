@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from numpy.core.arrayprint import array2string
 import seaborn as sb
 import pandas as pd
 import plotters_help
@@ -354,6 +353,7 @@ def create_makespan_cdf_order_policy(data, meta):
         ax.set_title(policy_name)
     plt.savefig(meta["file_name"])
 
+
 def create_energy_plot_scale(data, meta):
     for policy in data.values():
         sb.lineplot(x=policy["scale"], y=policy["energyUsage"])
@@ -371,62 +371,13 @@ def create_energy_plot_env(data, meta):
     g.legend.set_title("")
     plt.savefig(meta["file_name"])
 
-def create_usage_table_per_env(data, meta):
-    fig, ax = plt.subplots()
-    #hide the axes
-    fig.patch.set_visible(False)
-    ax.axis('off')
-    ax.axis('tight')
-
-
-    #create table
-    table = ax.table(cellText=data.values, colLabels=data.columns, loc='center')
-    fig.figsize=(100, 100) # This increases resolution
-    #display table
-    fig.tight_layout()
-    plt.savefig(meta["file_name"], dpi=900)
-
-def create_energy_per_workload(data, meta, policies):
-    dataframe2 = pd.DataFrame()
-
-    dataframe2['Policy'] = policies
-    
-    names = data['trace'].iloc[0:4]
-    arr1 = []
-    arr2 = []
-    arr3 = []
-    arr4 = []
-
-    
-    for it in range(0, len(data)):
-        if(it % 4 == 0):
-            arr1.append(data['energyUsage'].iloc[it])
-        elif(it % 4 == 1):
-            arr2.append(data['energyUsage'].iloc[it])
-        elif(it % 4 == 2):
-            arr3.append(data['energyUsage'].iloc[it])
-        elif(it % 4 == 3):
-            arr4.append(data['energyUsage'].iloc[it])
-
-    for it in range(0, len(names)):
-        if(it==0):
-            dataframe2[names[it]] = arr1
-        elif(it==1):
-            dataframe2[names[it]] = arr2
-        elif(it==2):
-            dataframe2[names[it]] = arr3
-        elif(it==3):
-            dataframe2[names[it]] = arr4            
-    fig, ax = plt.subplots()
-    #hide the axes
-    fig.patch.set_visible(False)
-    ax.axis('off')
-    ax.axis('tight')
-
-
-    #create table
-    table = ax.table(cellText=dataframe2.values, colLabels=dataframe2.columns, loc='center')
-    fig.figsize=(100, 100) # This increases resolution
-    #display table
-    fig.tight_layout()
-    plt.savefig(meta["file_name"], dpi=900)
+def create_energy_plot_workload(data, meta):
+    g = sb.catplot(
+        data=data, kind="bar",
+        x="trace", y="energyUsage", hue="policy",
+        ci="sd", palette="dark", alpha=.6, height=6
+    )
+    g.despine(left=True)
+    g.set_axis_labels("", "Energy usage (kWh)")
+    g.legend.set_title("")
+    plt.savefig(meta["file_name"])
