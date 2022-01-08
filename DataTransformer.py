@@ -226,9 +226,6 @@ class DataTransformer:
     def to_makespan_cdf_per_workload(self):
         pass
 
-    def to_energy_exp_workload(self):
-        pass
-
     def to_utilization_table_workload(self, environment_key, scale_key, file_name):
         filtered_data = pd.DataFrame(columns=["policy"])
 
@@ -324,23 +321,3 @@ class DataTransformer:
         df = df.groupby("timestamp").sum()
         df["cpuUsage"] = df["cpuUsage"].apply(lambda absoluteUsage: absoluteUsage / max_capacity)
         return df["cpuUsage"].mean()
-
-    def to_energy_exp_workload(self, scale_key, environment_key, file_name):
-        meta = {
-            "file_name": file_name
-        }
-
-        filtered_data = pd.DataFrame(columns=["policy", "energyUsage"])
-
-        for trace_name, trace in self.data.items():
-            for policy_name, policy in trace.items():
-                metrics_df = policy[environment_key][scale_key][self.metrics_file_key]
-                variable_df = policy[environment_key][scale_key][self.variableStore_file_key]
-                total_energy = self.__calculateTotalEnergyUsage(variable_df, metrics_df)
-
-                filtered_data = filtered_data.append({
-                    "policy": policy_name,
-                    "trace": trace_name,
-                    "energyUsage": total_energy,
-                }, ignore_index=True)
-        return filtered_data, meta
