@@ -322,13 +322,13 @@ def create_makespan_cdf_order_scale(data, meta):
     fig, axs = plt.subplots(1, len(data), figsize=(5 * len(data), 5))
 
     # TODO: order needed -> mapping in meta
-    for ax, scale_name in zip(axs, order_plots):
+    for idx, (ax, scale_name) in enumerate(zip(axs, order_plots)):
         scale = data[scale_name]
-        sb.histplot(data=scale, element="step", fill=False, cumulative=True, stat="density", common_norm=False, ax=ax)
+        sb.histplot(data=scale, element="step", fill=False, cumulative=True, stat="density", common_norm=False, ax=ax, legend=idx==len(axs)-1)
         ax.set_xlabel("Workflow makespan [s]")
         ax.set_ylabel("ECDF")
         ax.set_title(f"Scale: {get_trailing_int(scale_name)}")
-    plt.savefig(meta["file_name"])
+    plt.savefig(meta["file_name"], bbox_inches="tight")
 
 
 def create_makespan_cdf_order_policy(data, meta):
@@ -343,7 +343,7 @@ def create_makespan_cdf_order_policy(data, meta):
             axs.set_xlabel("Workflow makespan [s]")
             axs.set_ylabel("ECDF")
             axs.set_title(policy_name)
-        plt.savefig(meta["file_name"])
+        plt.savefig(meta["file_name"], bbox_inches="tight")
         return
 
     # TODO: order needed -> mapping in meta
@@ -352,12 +352,12 @@ def create_makespan_cdf_order_policy(data, meta):
         ax.set_xlabel("Workflow makespan [s]")
         ax.set_ylabel("ECDF")
         ax.set_title(policy_name)
-    plt.savefig(meta["file_name"])
+    plt.savefig(meta["file_name"], bbox_inches="tight")
 
 
 def create_energy_plot_scale(data, meta):
     sb.lineplot(data=data, x="scale", y="energyUsage", hue="policy", legend="auto")
-    plt.savefig(meta["file_name"])
+    plt.savefig(meta["file_name"], bbox_inches="tight")
 
 
 def create_energy_plot_env(data, meta):
@@ -369,7 +369,7 @@ def create_energy_plot_env(data, meta):
     g.despine(left=True)
     g.set_axis_labels("", "Energy usage (kWh)")
     g.legend.set_title("")
-    plt.savefig(meta["file_name"])
+    plt.savefig(meta["file_name"], bbox_inches="tight")
 
 def create_energy_plot_workload(data, meta):
     g = sb.catplot(
@@ -381,4 +381,4 @@ def create_energy_plot_workload(data, meta):
     g.set_axis_labels("", "Energy usage (kWh)")
     g.legend.set_title("")
     plt.xticks(rotation=15)
-    plt.savefig(meta["file_name"])
+    plt.savefig(meta["file_name"], bbox_inches="tight")
