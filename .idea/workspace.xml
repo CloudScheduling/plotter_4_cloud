@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="aad4d87c-c046-4532-be9f-4c45b0f2e60c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataTransformer.py" beforeDir="false" afterPath="$PROJECT_DIR$/DataTransformer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Notebooks/Experiment1_Scale.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/Experiment1_Scale.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Notebooks/Experiment2_Environment.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/Experiment2_Environment.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Notebooks/Experiment3_Workload.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/Experiment3_Workload.ipynb" afterDir="false" />
@@ -168,7 +169,14 @@
       <option name="project" value="LOCAL" />
       <updated>1641742606531</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Make utilization look decent">
+      <created>1641745657174</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1641745657174</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -196,30 +204,41 @@
     <MESSAGE value="Spread exp 1 plots over two rows" />
     <MESSAGE value="Move legenda in energy plot and make font larger" />
     <MESSAGE value="Make plots for exp align vertical" />
-    <option name="LAST_COMMIT_MESSAGE" value="Make plots for exp align vertical" />
+    <MESSAGE value="Make utilization look decent" />
+    <option name="LAST_COMMIT_MESSAGE" value="Make utilization look decent" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/DataTransformer.py</url>
-          <line>360</line>
+          <line>363</line>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/DataTransformer.py</url>
-          <line>268</line>
-          <option name="timeStamp" value="10" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/plotters.py</url>
-          <line>368</line>
+          <line>389</line>
           <option name="timeStamp" value="12" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/plotters.py</url>
-          <line>364</line>
+          <line>385</line>
           <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/plotters.py</url>
+          <line>382</line>
+          <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/plotters.py</url>
+          <line>339</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">
+          <url>notebook:///home/linus/Dokumente/Studium/Master/Amsterdam/02_DisSys/Project/CloudScheduling/plotter_4_cloud/Notebooks/Experiment1_Scale.ipynb</url>
+          <line>55</line>
+          <option name="timeStamp" value="21" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

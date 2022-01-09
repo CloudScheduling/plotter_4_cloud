@@ -331,11 +331,18 @@ def create_makespan_cdf_order_scale(data, meta):
     # TODO: order needed -> mapping in meta
     for idx, (ax, scale_name) in enumerate(zip(axs, order_plots)):
         scale = data[scale_name]
-        sb.histplot(data=scale, element="step", fill=False, cumulative=True, stat="density", common_norm=False, ax=ax, legend=idx==len(axs)-1, palette="colorblind")
+        sb.histplot(data=scale, element="step", fill=False, cumulative=True, stat="density", common_norm=False, ax=ax, legend=idx==0, palette="colorblind")
         if idx == len(data)-1:
             ax.set_xlabel("Workflow makespan [s]")
         ax.set_ylabel("ECDF")
         ax.set_title(f"Scale: {get_trailing_int(scale_name)}")
+
+    legend = axs[0].get_legend()
+    handles = legend.legendHandles
+    legend.remove()
+    axs[0].legend(handles, meta["legend_labels"], bbox_to_anchor=(1.05, 1.5),
+               loc="upper right", borderaxespad=0., ncol=len(meta["legend_labels"]))
+
     plt.savefig(meta["file_name"], bbox_inches="tight")
 
 
@@ -347,21 +354,35 @@ def create_makespan_cdf_order_policy(data, meta):
     if len(data) == 1:
         for idx, (policy_name, policy) in enumerate(data.items()):
             sb.histplot(data=policy, element="step", fill=False, cumulative=True, stat="density", common_norm=False,
-                        ax=axs, legend=idx==len(data)-1, palette="colorblind")
+                        ax=axs, legend=idx==0, palette="colorblind")
             if idx==len(data)-1:
                 axs.set_xlabel("Workflow makespan [s]")
             axs.set_ylabel("ECDF")
             axs.set_title(policy_name)
+
+        legend = axs.get_legend()
+        handles = legend.legendHandles
+        legend.remove()
+        axs.legend(handles, meta["legend_labels"], bbox_to_anchor=(1.05, 1.5),
+                      loc="upper right", borderaxespad=0., ncol=len(meta["legend_labels"]))
+
         plt.savefig(meta["file_name"], bbox_inches="tight")
         return
 
     # TODO: order needed -> mapping in meta
     for idx, (ax, (policy_name, policy)) in enumerate(zip(axs, data.items())):
-        sb.histplot(data=policy, element="step", fill=False, cumulative=True, stat="density", common_norm=False, ax=ax, legend=idx==len(data)-1, palette="colorblind")
+        sb.histplot(data=policy, element="step", fill=False, cumulative=True, stat="density", common_norm=False, ax=ax, legend=idx==0, palette="colorblind")
         if idx == len(data) - 1:
             ax.set_xlabel("Workflow makespan [s]")
         ax.set_ylabel("ECDF")
         ax.set_title(policy_name)
+
+    legend = axs[0].get_legend()
+    handles = legend.legendHandles
+    legend.remove()
+    axs[0].legend(handles, meta["legend_labels"], loc="upper right", bbox_to_anchor=(1.05, 1.5), borderaxespad=0., ncol=len(meta["legend_labels"]))
+
+
     plt.savefig(meta["file_name"], bbox_inches="tight")
 
 
@@ -369,6 +390,7 @@ def create_energy_plot_scale(data, meta):
     sb.lineplot(data=data, x="scale", y="energyUsage", hue="policy", markers=True, style="policy", dashes=False, palette="colorblind")
     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
     plt.ylabel("Energy usage (kWh)")
+    plt.xlabel("Scale")
     plt.savefig(meta["file_name"], bbox_inches="tight")
 
 

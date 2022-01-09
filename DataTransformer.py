@@ -85,7 +85,7 @@ class DataTransformer:
 
         # make sure to have ascending order of scales
         meta["order_plots"] = self.__create_sorted_scale_list(filtered_data.keys())
-
+        meta["legend_labels"] = next(iter(filtered_data.values())).keys()
         return filtered_data, meta
 
     def to_makespan_cdf_per_policy(self, trace_key, environment_key, file_name):
@@ -130,6 +130,7 @@ class DataTransformer:
         filtered_data = pd.DataFrame(columns=["policy", "scale", "energyUsage"])
 
         for policy_name, policy in self.data[trace_key].items():
+            if policy_name == "HEFT": continue # pro gamer move
             for scale_name, scale in policy[environment_key].items():
                 metrics_df = scale[self.metrics_file_key]
                 variable_df = scale[self.variableStore_file_key]
@@ -163,6 +164,7 @@ class DataTransformer:
                 filtered_data[env_name][policy_name] = makespan_df.rename(columns={"Makespan (s)": "makespan"})[
                     "makespan"]
 
+        meta["legend_labels"] = next(iter(filtered_data.values())).keys()
         return filtered_data, meta
 
     def to_energy_exp_environment(self, trace_key, scale_key, file_name):
@@ -239,6 +241,7 @@ class DataTransformer:
                 filtered_data[trace_name][policy_name] = makespan_df.rename(columns={"Makespan (s)": "makespan"})[
                     "makespan"]
 
+        meta["legend_labels"] = next(iter(filtered_data.values())).keys()
         return filtered_data, meta
 
     def to_energy_exp_workload(self, environment_key, scale_key, file_name):
@@ -248,7 +251,7 @@ class DataTransformer:
         filtered_data = pd.DataFrame(columns=["policy", "trace", "energyUsage"])
 
         for trace_name, trace in self.data.items():
-            if trace_name == "shell-parquet": continue # pro gamer move
+            if trace_name == "shell": continue # pro gamer move
             for policy_name, policy in trace.items():
                 file_dict = policy[environment_key][scale_key]
                 variable_df = file_dict[self.variableStore_file_key]
