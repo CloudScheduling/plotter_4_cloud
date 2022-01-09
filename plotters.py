@@ -325,22 +325,15 @@ def performance_per_KWH(list, time_list, gflop, name):
 def create_makespan_cdf_order_scale(data, meta):
     order_plots = meta["order_plots"]
 
-    fig = plt.figure(constrained_layout=True, figsize=(2.5 * len(data), 10))
-
-    gs = GridSpec(2, 4, figure=fig)  # TODO: remove hardcoding
-    axs = []
-    for count in range(len(order_plots)):
-        if count < 4:
-            row = 0
-        else:
-            row = 1
-        axs.append(fig.add_subplot(gs[row, count % 4]))
+    fig, axs = plt.subplots(len(data), 1, figsize=(10, 2.5 * len(data)))
+    fig.tight_layout()
 
     # TODO: order needed -> mapping in meta
     for idx, (ax, scale_name) in enumerate(zip(axs, order_plots)):
         scale = data[scale_name]
         sb.histplot(data=scale, element="step", fill=False, cumulative=True, stat="density", common_norm=False, ax=ax, legend=idx==len(axs)-1, palette="colorblind")
-        ax.set_xlabel("Workflow makespan [s]")
+        if idx == len(data)-1:
+            ax.set_xlabel("Workflow makespan [s]")
         ax.set_ylabel("ECDF")
         ax.set_title(f"Scale: {get_trailing_int(scale_name)}")
     plt.savefig(meta["file_name"], bbox_inches="tight")
@@ -375,6 +368,7 @@ def create_makespan_cdf_order_policy(data, meta):
 def create_energy_plot_scale(data, meta):
     sb.lineplot(data=data, x="scale", y="energyUsage", hue="policy", markers=True, style="policy", dashes=False, palette="colorblind")
     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+    plt.ylabel("Energy usage (kWh)")
     plt.savefig(meta["file_name"], bbox_inches="tight")
 
 
@@ -403,37 +397,27 @@ def create_energy_plot_workload(data, meta):
 
 
 def create_utilization_violin_workload(data, meta):
-    fig, axs = plt.subplots(len(data), 1, figsize=(10, 2.5 * len(data)))
+    fig, axs = plt.subplots(len(data), 1, figsize=(10, 3 * len(data)))
     fig.tight_layout()
     for idx, (ax, (name, df)) in enumerate(zip(axs, data.items())):
-        sb.violinplot(data=df, x="Utilization", y="Policy", ax=ax, palette="colorblind")
+        sb.violinplot(data=df, x="Utilization", y="Policy", ax=ax, palette="colorblind", cut=0, scale="width")
         ax.set_title(name)
-        if idx != len(data)-1:
+        if idx != len(data) - 1:
             ax.set_xlabel(None)
-            #ax.set_yticks([])
     plt.savefig(meta["file_name"], bbox_inches="tight")
 
 # needs an order for the scale :(
 def create_utilization_violin_scale(data, meta):
     order_plots = meta["order_plots"]
 
-    fig = plt.figure(constrained_layout=True, figsize=(2.5 * len(data), 10))
-
-    gs = GridSpec(2, 4, figure=fig)  # TODO: remove hardcoding
-    axs = []
-    for count in range(len(order_plots)):
-        if count < 4:
-            row = 0
-        else:
-            row = 1
-        axs.append(fig.add_subplot(gs[row, count % 4]))
+    fig, axs = plt.subplots(len(data), 1, figsize=(10, 3 * len(data)))
+    fig.tight_layout()
 
     for idx, (ax, scale_name) in enumerate(zip(axs, order_plots)):
         df = data[scale_name]
-        sb.violinplot(data=df, x="Utilization", y="Policy", ax=ax, palette="colorblind")
+        sb.violinplot(data=df, x="Utilization", y="Policy", ax=ax, palette="colorblind", cut=0, scale="width")
         ax.set_title(f"Scale: {scale_name}")
-        if idx != 0 and idx != 4:
-            ax.set_ylabel(None)
-            ax.set_yticks([])
+        if idx != len(data)-1:
+            ax.set_xlabel(None)
     plt.savefig(meta["file_name"], bbox_inches="tight")
 
