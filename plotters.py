@@ -1,7 +1,11 @@
+import math
+
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sb
 import pandas as pd
+from matplotlib.gridspec import GridSpec
+
 import plotters_help
 from DataTransformer import get_trailing_int
 
@@ -319,7 +323,17 @@ def performance_per_KWH(list, time_list, gflop, name):
 
 def create_makespan_cdf_order_scale(data, meta):
     order_plots = meta["order_plots"]
-    fig, axs = plt.subplots(1, len(data), figsize=(5 * len(data), 5))
+
+    fig = plt.figure(constrained_layout=True, figsize=(2.5 * len(data), 10))
+
+    gs = GridSpec(2, 4, figure=fig)  # TODO: remove hardcoding
+    axs = []
+    for count in range(len(order_plots)):
+        if count < 4:
+            row = 0
+        else:
+            row = 1
+        axs.append(fig.add_subplot(gs[row, count % 4]))
 
     # TODO: order needed -> mapping in meta
     for idx, (ax, scale_name) in enumerate(zip(axs, order_plots)):
@@ -397,7 +411,18 @@ def create_utilization_violin_workload(data, meta):
 # needs an order for the scale :(
 def create_utilization_violin_scale(data, meta):
     order_plots = meta["order_plots"]
-    fig, axs = plt.subplots(1, len(data), figsize=(5 * len(data), 5))
+
+    fig = plt.figure(constrained_layout=True, figsize=(2.5 * len(data), 10))
+
+    gs = GridSpec(2, 4, figure=fig)  # TODO: remove hardcoding
+    axs = []
+    for count in range(len(order_plots)):
+        if count < 4:
+            row = 0
+        else:
+            row = 1
+        axs.append(fig.add_subplot(gs[row, count % 4]))
+
     for idx, (ax, scale_name) in enumerate(zip(axs, order_plots)):
         df = data[scale_name]
         sb.violinplot(data=df, x="Utilization", y="Policy", ax=ax)
@@ -406,3 +431,4 @@ def create_utilization_violin_scale(data, meta):
             ax.set_ylabel(None)
             ax.set_yticks([])
     plt.savefig(meta["file_name"], bbox_inches="tight")
+
