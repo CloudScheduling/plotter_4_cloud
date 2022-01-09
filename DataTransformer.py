@@ -355,3 +355,33 @@ class DataTransformer:
             df["Utilization"] = df["Utilization"].astype('float64')
 
         return filtered_data, meta
+
+    def to_utilization_violin_scale(self, trace_key, environment_key, file_name):
+        filtered_data = {}
+
+        meta = {
+            "file_name": file_name,
+        }
+
+        # dict[traceId][policy][environmentType][scale][fileType]
+        for policy_name, policy in self.data[trace_key].items():
+            for scale_name, scale in policy[environment_key].items():
+                scale_name = get_trailing_int(scale_name)
+                if scale_name not in filtered_data:
+                    filtered_data[scale_name] = pd.DataFrame(columns=["Policy", "Utilization"])
+                metrics_df = scale[self.metrics_file_key]
+                host_df = scale[self.hostInfo_file_key]
+                utilization = self.__calculateMeanUtilizationPerTime(metrics_df, host_df)
+                env_df = pd.DataFrame(columns=["Policy", "Utilization"])
+                env_df["Utilization"] = utilization
+                env_df["Policy"] = policy_name
+                filtered_data[scale_name] = filtered_data[scale_name].append(env_df, ignore_index=True)
+
+        for df in filtered_data.values():
+            df["Policy"] = df["Policy"].astype("category")
+            df["Utilization"] = df["Utilization"].astype('float64')
+
+        meta["order_plots"] = list(filtered_data.keys())
+        meta["order_plots"].sort()
+
+        return filtered_data, meta

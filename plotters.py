@@ -393,3 +393,16 @@ def create_utilization_violin_workload(data, meta):
             ax.set_ylabel(None)
             ax.set_yticks([])
     plt.savefig(meta["file_name"], bbox_inches="tight")
+
+# needs an order for the scale :(
+def create_utilization_violin_scale(data, meta):
+    order_plots = meta["order_plots"]
+    fig, axs = plt.subplots(1, len(data), figsize=(5 * len(data), 5))
+    for idx, (ax, scale_name) in enumerate(zip(axs, order_plots)):
+        df = data[scale_name]
+        sb.violinplot(data=df, x="Utilization", y="Policy", ax=ax)
+        ax.set_title(f"Scale: {scale_name}")
+        if idx != 0:
+            ax.set_ylabel(None)
+            ax.set_yticks([])
+    plt.savefig(meta["file_name"], bbox_inches="tight")
