@@ -4,6 +4,8 @@
     <list default="true" id="aad4d87c-c046-4532-be9f-4c45b0f2e60c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Notebooks/Experiment1_Scale.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/Experiment1_Scale.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Notebooks/Experiment2_Environment.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/Experiment2_Environment.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Notebooks/Experiment3_Workload.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/Experiment3_Workload.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/plotters.py" beforeDir="false" afterPath="$PROJECT_DIR$/plotters.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -145,7 +147,14 @@
       <option name="project" value="LOCAL" />
       <updated>1641734664219</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Spread exp 1 plots over two rows">
+      <created>1641735939204</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1641735939204</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -170,7 +179,8 @@
     <MESSAGE value="Add utilization plot to last two experiments" />
     <MESSAGE value="Change plot to violine(?) again due to readability" />
     <MESSAGE value="Add violine plot for exp 1" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add violine plot for exp 1" />
+    <MESSAGE value="Spread exp 1 plots over two rows" />
+    <option name="LAST_COMMIT_MESSAGE" value="Spread exp 1 plots over two rows" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

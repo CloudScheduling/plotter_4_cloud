@@ -370,7 +370,8 @@ def create_makespan_cdf_order_policy(data, meta):
 
 
 def create_energy_plot_scale(data, meta):
-    sb.lineplot(data=data, x="scale", y="energyUsage", hue="policy", legend="auto")
+    sb.lineplot(data=data, x="scale", y="energyUsage", hue="policy")
+    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
     plt.savefig(meta["file_name"], bbox_inches="tight")
 
 
@@ -427,7 +428,7 @@ def create_utilization_violin_scale(data, meta):
         df = data[scale_name]
         sb.violinplot(data=df, x="Utilization", y="Policy", ax=ax)
         ax.set_title(f"Scale: {scale_name}")
-        if idx != 0:
+        if idx != 0 and idx != 4:
             ax.set_ylabel(None)
             ax.set_yticks([])
     plt.savefig(meta["file_name"], bbox_inches="tight")
