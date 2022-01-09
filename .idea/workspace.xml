@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="aad4d87c-c046-4532-be9f-4c45b0f2e60c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataTransformer.py" beforeDir="false" afterPath="$PROJECT_DIR$/DataTransformer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Notebooks/Experiment1_Scale.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/Experiment1_Scale.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Notebooks/Experiment2_Environment.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/Experiment2_Environment.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Notebooks/Experiment3_Workload.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/Experiment3_Workload.ipynb" afterDir="false" />
@@ -154,7 +155,14 @@
       <option name="project" value="LOCAL" />
       <updated>1641735939204</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Move legenda in energy plot and make font larger">
+      <created>1641738212292</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1641738212292</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -180,39 +188,41 @@
     <MESSAGE value="Change plot to violine(?) again due to readability" />
     <MESSAGE value="Add violine plot for exp 1" />
     <MESSAGE value="Spread exp 1 plots over two rows" />
-    <option name="LAST_COMMIT_MESSAGE" value="Spread exp 1 plots over two rows" />
+    <MESSAGE value="Move legenda in energy plot and make font larger" />
+    <option name="LAST_COMMIT_MESSAGE" value="Move legenda in energy plot and make font larger" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">
-          <url>notebook:///home/linus/Dokumente/Studium/Master/Amsterdam/02_DisSys/Project/CloudScheduling/plotter_4_cloud/Notebooks/Experiment1_Scale.ipynb</url>
-          <line>35</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">
           <url>notebook:///home/linus/Dokumente/Studium/Master/Amsterdam/02_DisSys/Project/CloudScheduling/plotter_4_cloud/Notebooks/Experiment3_Workload.ipynb</url>
           <line>47</line>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/plotters.py</url>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/DataTransformer.py</url>
-          <line>356</line>
+          <line>360</line>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/DataTransformer.py</url>
-          <line>264</line>
+          <line>268</line>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/DataTransformer.py</url>
-          <line>386</line>
+          <line>390</line>
           <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/plotters.py</url>
+          <line>378</line>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/plotters.py</url>
+          <line>374</line>
+          <option name="timeStamp" value="14" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

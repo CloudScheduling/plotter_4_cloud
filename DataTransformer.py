@@ -143,6 +143,9 @@ class DataTransformer:
                     }, ignore_index=True)
             filtered_data = filtered_data.sort_values(by=["scale"])
 
+        filtered_data["policy"] = filtered_data["policy"].astype("category")
+        filtered_data["scale"] = filtered_data["scale"].astype("int64")
+        filtered_data["energyUsage"] = filtered_data["energyUsage"].astype("float64")
         return filtered_data, meta
 
     def to_makespan_cdf_per_environment(self, trace_key, scale_key, file_name):
@@ -245,6 +248,7 @@ class DataTransformer:
         filtered_data = pd.DataFrame(columns=["policy", "trace", "energyUsage"])
 
         for trace_name, trace in self.data.items():
+            if trace_name == "shell-parquet": continue # pro gamer move
             for policy_name, policy in trace.items():
                 file_dict = policy[environment_key][scale_key]
                 variable_df = file_dict[self.variableStore_file_key]

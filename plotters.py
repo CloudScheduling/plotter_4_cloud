@@ -1,5 +1,6 @@
 import math
 
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sb
@@ -338,7 +339,7 @@ def create_makespan_cdf_order_scale(data, meta):
     # TODO: order needed -> mapping in meta
     for idx, (ax, scale_name) in enumerate(zip(axs, order_plots)):
         scale = data[scale_name]
-        sb.histplot(data=scale, element="step", fill=False, cumulative=True, stat="density", common_norm=False, ax=ax, legend=idx==len(axs)-1)
+        sb.histplot(data=scale, element="step", fill=False, cumulative=True, stat="density", common_norm=False, ax=ax, legend=idx==len(axs)-1, palette="colorblind")
         ax.set_xlabel("Workflow makespan [s]")
         ax.set_ylabel("ECDF")
         ax.set_title(f"Scale: {get_trailing_int(scale_name)}")
@@ -346,15 +347,16 @@ def create_makespan_cdf_order_scale(data, meta):
 
 
 def create_makespan_cdf_order_policy(data, meta):
-    fig, axs = plt.subplots(1, len(data), figsize=(5 * len(data), 5))
-
+    fig, axs = plt.subplots(len(data), 1, figsize=(10, 2.5 * len(data)))
+    fig.tight_layout()
 
     # single policy breaks the loop -> do seperately
     if len(data) == 1:
         for idx, (policy_name, policy) in enumerate(data.items()):
             sb.histplot(data=policy, element="step", fill=False, cumulative=True, stat="density", common_norm=False,
-                        ax=axs, legend=idx==len(data)-1)
-            axs.set_xlabel("Workflow makespan [s]")
+                        ax=axs, legend=idx==len(data)-1, palette="colorblind")
+            if idx==len(data)-1:
+                axs.set_xlabel("Workflow makespan [s]")
             axs.set_ylabel("ECDF")
             axs.set_title(policy_name)
         plt.savefig(meta["file_name"], bbox_inches="tight")
@@ -362,15 +364,16 @@ def create_makespan_cdf_order_policy(data, meta):
 
     # TODO: order needed -> mapping in meta
     for idx, (ax, (policy_name, policy)) in enumerate(zip(axs, data.items())):
-        sb.histplot(data=policy, element="step", fill=False, cumulative=True, stat="density", common_norm=False, ax=ax, legend=idx==len(data)-1)
-        ax.set_xlabel("Workflow makespan [s]")
+        sb.histplot(data=policy, element="step", fill=False, cumulative=True, stat="density", common_norm=False, ax=ax, legend=idx==len(data)-1, palette="colorblind")
+        if idx == len(data) - 1:
+            ax.set_xlabel("Workflow makespan [s]")
         ax.set_ylabel("ECDF")
         ax.set_title(policy_name)
     plt.savefig(meta["file_name"], bbox_inches="tight")
 
 
 def create_energy_plot_scale(data, meta):
-    sb.lineplot(data=data, x="scale", y="energyUsage", hue="policy")
+    sb.lineplot(data=data, x="scale", y="energyUsage", hue="policy", markers=True, style="policy", dashes=False, palette="colorblind")
     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
     plt.savefig(meta["file_name"], bbox_inches="tight")
 
@@ -379,7 +382,7 @@ def create_energy_plot_env(data, meta):
     g = sb.catplot(
         data=data, kind="bar",
         x="environment", y="energyUsage", hue="policy",
-        ci="sd", alpha=.6, height=6
+        ci="sd", alpha=.6, height=6, palette="colorblind"
     )
     g.despine(left=True)
     g.set_axis_labels("", "Energy usage (kWh)")
@@ -390,7 +393,7 @@ def create_energy_plot_workload(data, meta):
     g = sb.catplot(
         data=data, kind="bar",
         x="trace", y="energyUsage", hue="policy",
-        ci="sd", alpha=.6, height=6
+        ci="sd", alpha=.6, height=6, palette="colorblind"
     )
     g.despine(left=True)
     g.set_axis_labels("", "Energy usage (kWh)")
@@ -400,13 +403,14 @@ def create_energy_plot_workload(data, meta):
 
 
 def create_utilization_violin_workload(data, meta):
-    fig, axs = plt.subplots(1, len(data), figsize=(5 * len(data), 5))
+    fig, axs = plt.subplots(len(data), 1, figsize=(10, 2.5 * len(data)))
+    fig.tight_layout()
     for idx, (ax, (name, df)) in enumerate(zip(axs, data.items())):
-        sb.violinplot(data=df, x="Utilization", y="Policy", ax=ax)
+        sb.violinplot(data=df, x="Utilization", y="Policy", ax=ax, palette="colorblind")
         ax.set_title(name)
-        if idx != 0:
-            ax.set_ylabel(None)
-            ax.set_yticks([])
+        if idx != len(data)-1:
+            ax.set_xlabel(None)
+            #ax.set_yticks([])
     plt.savefig(meta["file_name"], bbox_inches="tight")
 
 # needs an order for the scale :(
@@ -426,7 +430,7 @@ def create_utilization_violin_scale(data, meta):
 
     for idx, (ax, scale_name) in enumerate(zip(axs, order_plots)):
         df = data[scale_name]
-        sb.violinplot(data=df, x="Utilization", y="Policy", ax=ax)
+        sb.violinplot(data=df, x="Utilization", y="Policy", ax=ax, palette="colorblind")
         ax.set_title(f"Scale: {scale_name}")
         if idx != 0 and idx != 4:
             ax.set_ylabel(None)
