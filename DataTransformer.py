@@ -288,6 +288,15 @@ class DataTransformer:
         :param host_df:
         :return:
         """
+        return self.__calculateMeanUtilizationPerTime(metrics_df, host_df).mean()
+
+    def __calculateMeanUtilizationPerTime(self, metrics_df, host_df):
+        """
+        Utilization is the mean utilization over all points in time where there was something captured (relative)
+        :param metrics_df:
+        :param host_df:
+        :return:
+        """
         df = metrics_df[
             ["Timestamp(s)", "cpuUsage(CPU usage of all CPUs of the host in MHz)"]]
         df = df.rename(columns={
@@ -297,4 +306,52 @@ class DataTransformer:
         max_capacity = host_df[["maxCapacity(MHz)"]].sum().values[0]
         df = df.groupby("timestamp").sum()
         df["cpuUsage"] = df["cpuUsage"].apply(lambda absoluteUsage: absoluteUsage / max_capacity)
-        return df["cpuUsage"].mean()
+        return df["cpuUsage"]
+
+    def to_utilization_violin_workload(self, environment_key, scale_key, file_name):
+        filtered_data = {}
+
+        meta = {
+            "file_name": file_name,
+        }
+
+        for trace_name, trace in self.data.items():
+            filtered_data[trace_name] = pd.DataFrame(columns=["Policy", "Utilization"])
+            for policy_name, policy in trace.items():
+                metrics_df = policy[environment_key][scale_key][self.metrics_file_key]
+                host_df = policy[environment_key][scale_key][self.hostInfo_file_key]
+                utilization = self.__calculateMeanUtilizationPerTime(metrics_df, host_df)
+                policy_df = pd.DataFrame(columns=["Policy", "Utilization"])
+                policy_df["Utilization"] = utilization
+                policy_df["Policy"] = policy_name
+                filtered_data[trace_name] = filtered_data[trace_name].append(policy_df, ignore_index=True)
+            filtered_data[trace_name]["Policy"] = filtered_data[trace_name]["Policy"].astype("category")
+            filtered_data[trace_name]["Utilization"] = filtered_data[trace_name]["Utilization"].astype('float64')
+        return filtered_data, meta
+
+
+    def to_utilization_violin_environment(self, trace_key, scale_key, file_name):
+        filtered_data = {}
+
+        meta = {
+            "file_name": file_name,
+        }
+
+        # dict[traceId][policy][environmentType][scale][fileType]
+        for policy_name, policy in self.data[trace_key].items():
+            for env_name, env in policy.items():
+                if env_name not in filtered_data:
+                    filtered_data[env_name] = pd.DataFrame(columns=["Policy", "Utilization"])
+                metrics_df = env[scale_key][self.metrics_file_key]
+                host_df = env[scale_key][self.hostInfo_file_key]
+                utilization = self.__calculateMeanUtilizationPerTime(metrics_df, host_df)
+                env_df = pd.DataFrame(columns=["Policy", "Utilization"])
+                env_df["Utilization"] = utilization
+                env_df["Policy"] = policy_name
+                filtered_data[env_name] = filtered_data[env_name].append(env_df, ignore_index=True)
+
+        for df in filtered_data.values():
+            df["Policy"] = df["Policy"].astype("category")
+            df["Utilization"] = df["Utilization"].astype('float64')
+
+        return filtered_data, meta
