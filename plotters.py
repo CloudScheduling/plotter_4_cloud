@@ -387,7 +387,7 @@ def create_energy_plot_workload(data, meta):
 def create_utilization_violin_workload(data, meta):
     fig, axs = plt.subplots(1, len(data), figsize=(5 * len(data), 5))
     for idx, (ax, (name, df)) in enumerate(zip(axs, data.items())):
-        sb.boxplot(data=df, x="Utilization", y="Policy", ax=ax)
+        sb.violinplot(data=df, x="Utilization", y="Policy", ax=ax)
         ax.set_title(name)
         if idx != 0:
             ax.set_ylabel(None)
